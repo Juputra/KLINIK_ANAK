@@ -2,6 +2,7 @@ package com.example.klinikanak.ui.pasien
 
 import android.content.Intent
 import android.os.Bundle
+import androidx.appcompat.app.AlertDialog
 import androidx.appcompat.app.AppCompatActivity
 import com.example.klinikanak.databinding.ActivityPasienDashboardBinding
 import com.example.klinikanak.ui.auth.LoginActivity
@@ -24,9 +25,16 @@ class PasienDashboardActivity : AppCompatActivity() {
 
         // Menu Logout
         binding.btnLogout.setOnClickListener {
-            sessionManager.logout()
-            startActivity(Intent(this, LoginActivity::class.java))
-            finish()
+            AlertDialog.Builder(this)
+                .setTitle("Konfirmasi Keluar")
+                .setMessage("Apakah Anda yakin ingin keluar dari akun ini?")
+                .setPositiveButton("Ya, Keluar") { _, _ ->
+                    sessionManager.logout()
+                    startActivity(Intent(this, LoginActivity::class.java))
+                    finish()
+                }
+                .setNegativeButton("Batal", null)
+                .show()
         }
 
         // Navigasi Menu

@@ -2,6 +2,7 @@ package com.example.klinikanak.ui.dokter
 
 import android.content.Intent
 import android.os.Bundle
+import androidx.appcompat.app.AlertDialog
 import androidx.appcompat.app.AppCompatActivity
 import com.example.klinikanak.databinding.ActivityDokterDashboardBinding
 import com.example.klinikanak.ui.auth.LoginActivity
@@ -21,9 +22,16 @@ class DokterDashboardActivity : AppCompatActivity() {
         binding.tvNamaDokter.text = sessionManager.getNama()
 
         binding.btnLogoutDokter.setOnClickListener {
-            sessionManager.logout()
-            startActivity(Intent(this, LoginActivity::class.java))
-            finish()
+            AlertDialog.Builder(this)
+                .setTitle("Konfirmasi Keluar")
+                .setMessage("Apakah Anda yakin ingin keluar dari akun ini?")
+                .setPositiveButton("Ya, Keluar") { _, _ ->
+                    sessionManager.logout()
+                    startActivity(Intent(this, LoginActivity::class.java))
+                    finish()
+                }
+                .setNegativeButton("Batal", null)
+                .show()
         }
 
         binding.menuAntrean.setOnClickListener {
