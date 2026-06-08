@@ -11,6 +11,7 @@ import androidx.recyclerview.widget.LinearLayoutManager
 import com.example.klinikanak.ApiResponse
 import com.example.klinikanak.Dokter
 import com.example.klinikanak.DokterResponse
+import com.example.klinikanak.LayananResponse
 import com.example.klinikanak.R
 import com.example.klinikanak.adapter.DokterAdapter
 import com.example.klinikanak.api.ApiClient
@@ -66,7 +67,6 @@ class KelolaDokterActivity : AppCompatActivity() {
         })
     }
 
-    // Ketuk item -> pilih Edit / Hapus
     private fun tampilkanOpsi(dokter: Dokter) {
         AlertDialog.Builder(this)
             .setTitle(dokter.namaLengkap)
@@ -76,20 +76,19 @@ class KelolaDokterActivity : AppCompatActivity() {
             .show()
     }
 
-    // dokter == null -> Tambah, selain itu -> Edit
     private fun tampilkanForm(dokter: Dokter?) {
-        val view = LayoutInflater.from(this).inflate(R.layout.dialog_tambah_dokter, null)
-        val etNama = view.findViewById<EditText>(R.id.etNama)
+        val view       = LayoutInflater.from(this).inflate(R.layout.dialog_tambah_dokter, null)
+        val etNama     = view.findViewById<EditText>(R.id.etNama)
         val etUsername = view.findViewById<EditText>(R.id.etUsername)
         val etPassword = view.findViewById<EditText>(R.id.etPassword)
-        val etNoSip = view.findViewById<EditText>(R.id.etNoSip)
-        val etSpesialisasi = view.findViewById<EditText>(R.id.etSpesialisasi)
+        val etNoSip    = view.findViewById<EditText>(R.id.etNoSip)
+        val etSpes     = view.findViewById<EditText>(R.id.etSpesialisasi)
 
         if (dokter != null) {
             etNama.setText(dokter.namaLengkap)
             etUsername.setText(dokter.username)
             etNoSip.setText(dokter.noSip ?: "")
-            etSpesialisasi.setText(dokter.spesialisasi ?: "")
+            etSpes.setText(dokter.spesialisasi ?: "")
             etPassword.hint = "Password (kosongkan jika tidak diubah)"
         }
 
@@ -97,11 +96,11 @@ class KelolaDokterActivity : AppCompatActivity() {
             .setTitle(if (dokter == null) "Tambah Dokter" else "Edit Dokter")
             .setView(view)
             .setPositiveButton("Simpan") { _, _ ->
-                val nama = etNama.text.toString().trim()
+                val nama     = etNama.text.toString().trim()
                 val username = etUsername.text.toString().trim()
                 val password = etPassword.text.toString().trim()
-                val noSip = etNoSip.text.toString().trim()
-                val spesialisasi = etSpesialisasi.text.toString().trim()
+                val noSip    = etNoSip.text.toString().trim()
+                val spes     = etSpes.text.toString().trim()
 
                 if (nama.isEmpty() || username.isEmpty()) {
                     Toast.makeText(this, "Nama dan username wajib diisi", Toast.LENGTH_SHORT).show()
@@ -109,28 +108,71 @@ class KelolaDokterActivity : AppCompatActivity() {
                     if (password.isEmpty()) {
                         Toast.makeText(this, "Password wajib diisi", Toast.LENGTH_SHORT).show()
                     } else {
-                        ApiClient.instance.tambahDokter(username, password, nama, noSip, spesialisasi).enqueue(cb())
+                        ApiClient.instance.tambahDokter(username, password, nama, noSip, spes).enqueue(cb())
                     }
                 } else {
-                    ApiClient.instance.updateDokter(dokter.idUser, username, password, nama, noSip, spesialisasi).enqueue(cb())
+                    ApiClient.instance.updateDokter(dokter.idUser, username, password, nama, noSip, spes).enqueue(cb())
                 }
             }
             .setNegativeButton("Batal", null)
             .show()
     }
 
+    // ✅ FIX 6: Cek pasien aktif sebelum hapus
     private fun konfirmasiHapus(dokter: Dokter) {
-        AlertDialog.Builder(this)
-            .setTitle("Hapus Dokter")
-            .setMessage("Yakin menghapus ${dokter.namaLengkap}?")
-            .setPositiveButton("Hapus") { _, _ ->
-                ApiClient.instance.hapusUser(dokter.idUser).enqueue(cb())
-            }
-            .setNegativeButton("Batal", null)
-            .show()
+        // Tampilkan loading / nonaktifkan interaksi sementara
+        Toast.makeText(this, "Memeriksa data pasien aktif...", Toast.LENGTH_SHORT).show()
+
+        ApiClient.instance.getLayanan("dokter", dokter.idUser, null)
+            .enqueue(object : Callback<LayananResponse> {
+                override fun onResponse(call: Call<LayananResponse>, response: Response<LayananResponse>) {
+                    if (response.isSuccessful && response.body()?.status == "success") {
+                        val pasienAktif = response.body()!!.data.filter { it.statusLayanan < 3 }
+
+                        if (pasienAktif.isNotEmpty()) {
+                            // ❌ TOLAK: masih ada pasien yang belum selesai
+                            AlertDialog.Builder(this@KelolaDokterActivity)
+                                .setTitle("Tidak Bisa Dihapus")
+                                .setMessage(
+                                    "${dokter.namaLengkap} masih memiliki ${pasienAktif.size} pasien aktif " +
+                                            "yang belum selesai ditangani.\n\n" +
+                                            "Selesaikan semua kunjungan aktif terlebih dahulu sebelum menghapus dokter ini."
+                                )
+                                .setPositiveButton("Mengerti", null)
+                                .show()
+                        } else {
+                            // ✅ AMAN: tidak ada pasien aktif, lanjut konfirmasi hapus
+                            AlertDialog.Builder(this@KelolaDokterActivity)
+                                .setTitle("Hapus Dokter")
+                                .setMessage("Yakin menghapus ${dokter.namaLengkap}?\n\nTindakan ini tidak dapat dibatalkan.")
+                                .setPositiveButton("Hapus") { _, _ ->
+                                    ApiClient.instance.hapusUser(dokter.idUser).enqueue(cb())
+                                }
+                                .setNegativeButton("Batal", null)
+                                .show()
+                        }
+                    } else {
+                        // Jika tidak bisa cek, izinkan hapus dengan peringatan
+                        AlertDialog.Builder(this@KelolaDokterActivity)
+                            .setTitle("Hapus Dokter")
+                            .setMessage("Tidak dapat memverifikasi pasien aktif. Yakin tetap menghapus ${dokter.namaLengkap}?")
+                            .setPositiveButton("Hapus") { _, _ ->
+                                ApiClient.instance.hapusUser(dokter.idUser).enqueue(cb())
+                            }
+                            .setNegativeButton("Batal", null)
+                            .show()
+                    }
+                }
+                override fun onFailure(call: Call<LayananResponse>, t: Throwable) {
+                    Toast.makeText(
+                        this@KelolaDokterActivity,
+                        "Koneksi gagal saat memeriksa pasien: ${t.message}",
+                        Toast.LENGTH_LONG
+                    ).show()
+                }
+            })
     }
 
-    // Callback umum: tampilkan pesan server lalu segarkan daftar
     private fun cb() = object : Callback<ApiResponse> {
         override fun onResponse(call: Call<ApiResponse>, response: Response<ApiResponse>) {
             val body = response.body()

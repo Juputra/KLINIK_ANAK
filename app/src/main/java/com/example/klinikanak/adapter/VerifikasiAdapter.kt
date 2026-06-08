@@ -3,9 +3,11 @@ package com.example.klinikanak.adapter
 import android.view.LayoutInflater
 import android.view.ViewGroup
 import androidx.recyclerview.widget.RecyclerView
+import com.example.klinikanak.AppConstants
 import com.example.klinikanak.Kunjungan
 import com.example.klinikanak.R
 import com.example.klinikanak.databinding.ItemRiwayatBinding
+import com.example.klinikanak.utils.FormatHelper
 
 class VerifikasiAdapter(
     private var list: List<Kunjungan>,
@@ -22,10 +24,18 @@ class VerifikasiAdapter(
     override fun onBindViewHolder(holder: ViewHolder, position: Int) {
         val k = list[position]
 
-        holder.binding.tvTitle.text = (k.namaAnak ?: "Pasien") + "  •  " + k.tanggalKunjungan
+        // ✅ FIX 8: Format tanggal "2025-06-08" → "08 Jun 2025"
+        val tanggalFormatted = FormatHelper.formatTanggal(k.tanggalKunjungan)
+        holder.binding.tvTitle.text = (k.namaAnak ?: "Pasien") + "  •  " + tanggalFormatted
 
-        val biayaStr = k.totalBiaya?.let { "Rp ${it.toLong()}" } ?: "Rp 150000"
-        holder.binding.tvSubtitle1.text = "Tagihan: $biayaStr"
+        // ✅ FIX 8: Format rupiah "Rp 150000" → "Rp 150.000"
+        // Gunakan total_biaya dari server jika ada, fallback ke AppConstants
+        val biayaFormatted = if (k.totalBiaya != null && k.totalBiaya > 0) {
+            FormatHelper.formatRupiah(k.totalBiaya)
+        } else {
+            FormatHelper.formatRupiah(AppConstants.BIAYA_KONSULTASI)
+        }
+        holder.binding.tvSubtitle1.text = "Tagihan: $biayaFormatted"
         holder.binding.tvSubtitle2.text = "Metode: " + (k.metodePembayaran ?: "Menunggu Pasien")
 
         val lunas = k.statusLayanan >= 4

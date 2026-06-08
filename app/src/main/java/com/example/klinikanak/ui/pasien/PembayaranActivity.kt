@@ -26,11 +26,9 @@ class PembayaranActivity : AppCompatActivity() {
         setContentView(binding.root)
 
         sessionManager = SessionManager(this)
-
         setupToolbar()
         setupRecyclerView()
         setupSwipeRefresh()
-
         fetchData()
     }
 
@@ -45,8 +43,13 @@ class PembayaranActivity : AppCompatActivity() {
 
     private fun setupRecyclerView() {
         adapter = PembayaranAdapter(emptyList()) { kunjungan ->
-            val intent = Intent(this, PembayaranDetailActivity::class.java)
-            intent.putExtra("id_kunjungan", kunjungan.idKunjungan.toString())
+            // ✅ FIX 9: Kirim data medis ke halaman detail pembayaran
+            val intent = Intent(this, PembayaranDetailActivity::class.java).apply {
+                putExtra("id_kunjungan", kunjungan.idKunjungan.toString())
+                putExtra("diagnosa", kunjungan.diagnosa ?: "-")
+                putExtra("resep", kunjungan.resepObat ?: "-")
+                putExtra("nama_anak", kunjungan.namaAnak ?: "Pasien")
+            }
             startActivity(intent)
         }
         binding.rvPembayaran.layoutManager = LinearLayoutManager(this)
@@ -61,7 +64,6 @@ class PembayaranActivity : AppCompatActivity() {
         binding.swipeRefresh.isRefreshing = true
         val idUser = sessionManager.getUserId().toString()
 
-        // BUG FIX: Ubah dari "2" menjadi "3" agar tagihan muncul!
         ApiClient.instance.getLayanan("pasien", idUser, "3")
             .enqueue(object : Callback<LayananResponse> {
                 override fun onResponse(call: Call<LayananResponse>, response: Response<LayananResponse>) {
@@ -79,7 +81,6 @@ class PembayaranActivity : AppCompatActivity() {
                         Toast.makeText(this@PembayaranActivity, "Error Server", Toast.LENGTH_SHORT).show()
                     }
                 }
-
                 override fun onFailure(call: Call<LayananResponse>, t: Throwable) {
                     binding.swipeRefresh.isRefreshing = false
                     Toast.makeText(this@PembayaranActivity, "Koneksi Gagal", Toast.LENGTH_SHORT).show()

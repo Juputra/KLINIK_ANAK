@@ -6,6 +6,7 @@ import androidx.appcompat.app.AppCompatActivity
 import com.example.klinikanak.LayananResponse
 import com.example.klinikanak.api.ApiClient
 import com.example.klinikanak.databinding.ActivityLaporanBinding
+import com.example.klinikanak.utils.FormatHelper
 import retrofit2.Call
 import retrofit2.Callback
 import retrofit2.Response
@@ -35,17 +36,19 @@ class LaporanActivity : AppCompatActivity() {
             .enqueue(object : Callback<LayananResponse> {
                 override fun onResponse(call: Call<LayananResponse>, response: Response<LayananResponse>) {
                     if (response.isSuccessful && response.body()?.status == "success") {
-                        val data = response.body()!!.data
-                        val selesai = data.filter { it.statusLayanan >= 3 }
-                        val pendapatan = selesai.sumOf { it.totalBiaya ?: 0.0 }
-                        val umum = selesai.count { it.metodePembayaran == "umum" }
-                        val asuransi = selesai.count { it.metodePembayaran == "asuransi" }
+                        val data    = response.body()!!.data
+                        val selesai = data.filter { it.statusLayanan >= 4 }
 
-                        binding.tvTotalPendapatan.text = "Rp ${pendapatan.toLong()}"
-                        binding.tvTotalKunjungan.text = data.size.toString()
-                        binding.tvTotalSelesai.text = selesai.size.toString()
-                        binding.tvUmum.text = umum.toString()
-                        binding.tvAsuransi.text = asuransi.toString()
+                        val pendapatan = selesai.sumOf { it.totalBiaya ?: 0.0 }
+                        val umum       = selesai.count { it.metodePembayaran == "umum" }
+                        val asuransi   = selesai.count { it.metodePembayaran == "asuransi" }
+
+                        // ✅ FIX 8: Format rupiah yang benar: "Rp 1.500.000" bukan "Rp 1500000"
+                        binding.tvTotalPendapatan.text = FormatHelper.formatRupiah(pendapatan)
+                        binding.tvTotalKunjungan.text  = data.size.toString()
+                        binding.tvTotalSelesai.text    = selesai.size.toString()
+                        binding.tvUmum.text            = umum.toString()
+                        binding.tvAsuransi.text        = asuransi.toString()
                     } else {
                         Toast.makeText(this@LaporanActivity, "Gagal memuat laporan", Toast.LENGTH_SHORT).show()
                     }
