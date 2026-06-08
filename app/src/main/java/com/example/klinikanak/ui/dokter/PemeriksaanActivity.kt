@@ -91,6 +91,7 @@ class PemeriksaanActivity : AppCompatActivity() {
     private fun bukaFormPemeriksaan(kunjungan: Kunjungan) {
         val intent = Intent(this, PemeriksaanDetailActivity::class.java).apply {
             putExtra("id_kunjungan", kunjungan.idKunjungan.toString())
+            putExtra("id_pasien", kunjungan.idPasien.toString())
             putExtra("keluhan", kunjungan.keluhanAwal)
             putExtra("nama_anak", kunjungan.namaAnak ?: "Pasien #${kunjungan.idPasien}")
             putExtra("nama_ortu", kunjungan.namaOrtu ?: "-")

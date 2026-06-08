@@ -50,6 +50,16 @@
                         android:layout_marginTop="8dp"
                         android:text="@string/complaint_label"
                         android:textColor="@color/text_secondary" />
+                    <com.google.android.material.button.MaterialButton
+                        android:id="@+id/btnLihatRiwayat"
+                        style="@style/Widget.MaterialComponents.Button.TextButton.Icon"
+                        android:layout_width="wrap_content"
+                        android:layout_height="wrap_content"
+                        android:layout_marginTop="12dp"
+                        android:text="Lihat Rekam Medis Pasien Ini"
+                        android:textColor="@color/primary_blue"
+                        app:icon="@drawable/ic_history"
+                        app:iconTint="@color/primary_blue" />
                 </LinearLayout>
             </com.google.android.material.card.MaterialCardView>
 
