@@ -191,5 +191,11 @@ interface ApiService {
     fun konfirmasiPembayaran(
         @Field("id_kunjungan") idKunjungan: String
     ): Call<ApiResponse>
+    @FormUrlEncoded
+    @POST("tolak_pembayaran.php")
+    fun tolakPembayaran(
+        @Field("id_kunjungan") idKunjungan: String,
+        @Field("catatan_admin") catatan: String
+    ): Call<ApiResponse>
 }
 

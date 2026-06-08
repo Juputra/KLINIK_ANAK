@@ -50,6 +50,7 @@ class PembayaranActivity : AppCompatActivity() {
                 putExtra("resep", kunjungan.resepObat ?: "-")
                 putExtra("nama_anak", kunjungan.namaAnak ?: "Pasien")
                 putExtra("total_biaya", kunjungan.totalBiaya ?: 0.0)
+                putExtra("catatan_admin", kunjungan.catatanAdmin)
             }
             startActivity(intent)
         }

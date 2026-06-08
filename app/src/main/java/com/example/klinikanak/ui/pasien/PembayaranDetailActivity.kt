@@ -82,6 +82,14 @@ class PembayaranDetailActivity : AppCompatActivity() {
 
         // Format tagihan menjadi Rupiah (contoh: Rp 150.000)
         binding.tvTotalBiaya.text = FormatHelper.formatRupiah(totalBiayaRaw)
+        val catatanAdmin = intent.getStringExtra("catatan_admin")
+
+        if (!catatanAdmin.isNullOrEmpty() && catatanAdmin != "null") {
+            binding.tvCatatanRevisi.visibility = View.VISIBLE
+            binding.tvCatatanRevisi.text = "⚠️ PEMBAYARAN DITOLAK\nAlasan: $catatanAdmin\n\nSilakan unggah ulang bukti yang benar."
+        } else {
+            binding.tvCatatanRevisi.visibility = View.GONE
+        }
     }
 
     private fun setupMetodePembayaran() {

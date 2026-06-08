@@ -19,6 +19,16 @@
             android:layout_height="wrap_content"
             android:orientation="vertical"
             android:padding="24dp">
+            <TextView
+                android:id="@+id/tvCatatanRevisi"
+                android:layout_width="match_parent"
+                android:layout_height="wrap_content"
+                android:layout_marginBottom="16dp"
+                android:background="#FFEBEE"
+                android:padding="16dp"
+                android:textColor="@color/danger_red"
+                android:textStyle="bold"
+                android:visibility="gone" />
 
             <com.google.android.material.card.MaterialCardView
                 android:layout_width="match_parent"

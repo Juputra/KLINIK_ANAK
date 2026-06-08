@@ -69,6 +69,8 @@ class DetailVerifikasiActivity : AppCompatActivity() {
 
                 binding.btnAksiAdmin.text = "Verifikasi & Nyatakan Lunas"
                 binding.btnAksiAdmin.setOnClickListener { konfirmasiLunasDialog() }
+                binding.btnTolakBukti.visibility = View.VISIBLE
+                binding.btnTolakBukti.setOnClickListener { dialogTolakBukti() }
             }
             6 -> {
                 // Sudah Lunas (Hanya lihat)
@@ -128,6 +130,53 @@ class DetailVerifikasiActivity : AppCompatActivity() {
             }
             override fun onFailure(call: Call<ApiResponse>, t: Throwable) {
                 binding.btnAksiAdmin.isEnabled = true
+            }
+        })
+    }
+    private fun dialogTolakBukti() {
+        val input = android.widget.EditText(this)
+        input.hint = "Tulis alasan penolakan (cth: Foto buram)"
+        input.setPadding(40, 40, 40, 40)
+
+        AlertDialog.Builder(this)
+            .setTitle("Tolak Bukti Pembayaran")
+            .setMessage("Pasien akan diminta untuk mengunggah ulang bukti pembayaran.")
+            .setView(input)
+            .setPositiveButton("Kirim Penolakan") { _, _ ->
+                val alasan = input.text.toString().trim()
+                if (alasan.isNotEmpty()) {
+                    prosesTolakBukti(alasan)
+                } else {
+                    Toast.makeText(this, "Alasan wajib diisi!", Toast.LENGTH_SHORT).show()
+                }
+            }
+            .setNegativeButton("Batal", null)
+            .show()
+    }
+
+    private fun prosesTolakBukti(alasan: String) {
+        binding.btnAksiAdmin.isEnabled = false
+        binding.btnTolakBukti.isEnabled = false
+        binding.btnTolakBukti.text = "Memproses..."
+
+        ApiClient.instance.tolakPembayaran(idKunjungan, alasan).enqueue(object : Callback<ApiResponse> {
+            override fun onResponse(call: Call<ApiResponse>, response: Response<ApiResponse>) {
+                if (response.isSuccessful && response.body()?.status == "success") {
+                    Toast.makeText(this@DetailVerifikasiActivity, "Penolakan berhasil dikirim ke Pasien!", Toast.LENGTH_LONG).show()
+                    finish()
+                } else {
+                    Toast.makeText(this@DetailVerifikasiActivity, "Gagal menolak", Toast.LENGTH_SHORT).show()
+                    binding.btnAksiAdmin.isEnabled = true
+                    binding.btnTolakBukti.isEnabled = true
+                    binding.btnTolakBukti.text = "Tolak Bukti (Minta Upload Ulang)"
+                }
+            }
+
+            override fun onFailure(call: Call<ApiResponse>, t: Throwable) {
+                Toast.makeText(this@DetailVerifikasiActivity, "Koneksi Gagal", Toast.LENGTH_SHORT).show()
+                binding.btnAksiAdmin.isEnabled = true
+                binding.btnTolakBukti.isEnabled = true
+                binding.btnTolakBukti.text = "Tolak Bukti (Minta Upload Ulang)"
             }
         })
     }
