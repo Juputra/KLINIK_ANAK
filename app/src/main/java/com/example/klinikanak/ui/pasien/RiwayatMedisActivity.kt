@@ -52,6 +52,7 @@ class RiwayatMedisActivity : AppCompatActivity() {
                 putExtra("diagnosa", kunjungan.diagnosa)
                 putExtra("resep", kunjungan.resepObat)
                 putExtra("biaya", kunjungan.totalBiaya ?: 0.0)
+                putExtra("bukti_pembayaran", kunjungan.buktiPembayaran)
             }
             startActivity(intent)
         }
@@ -69,7 +70,7 @@ class RiwayatMedisActivity : AppCompatActivity() {
         val idUser = sessionManager.getUserId().toString()
 
         // BUG FIX: Ubah dari "3" menjadi "4" agar hanya yang LUNAS yang masuk rekam medis!
-        ApiClient.instance.getLayanan("pasien", idUser, "4")
+        ApiClient.instance.getLayanan("pasien", idUser, "6")
             .enqueue(object : Callback<LayananResponse> {
                 override fun onResponse(call: Call<LayananResponse>, response: Response<LayananResponse>) {
                     binding.swipeRefresh.isRefreshing = false

@@ -1,6 +1,7 @@
 package com.example.klinikanak.ui.admin
 
 import android.app.AlertDialog
+import android.content.Intent
 import android.os.Bundle
 import android.widget.Toast
 import androidx.appcompat.app.AppCompatActivity
@@ -42,9 +43,19 @@ class VerifikasiPembayaranActivity : AppCompatActivity() {
     }
 
     private fun setupRecyclerView() {
-        // Menerima aksi klik dari Adapter untuk memunculkan konfirmasi
         adapter = VerifikasiAdapter(emptyList()) { kunjungan ->
-            tampilkanDialogKonfirmasi(kunjungan)
+            val intent = Intent(this, DetailVerifikasiActivity::class.java).apply {
+                putExtra("id_kunjungan", kunjungan.idKunjungan.toString())
+                putExtra("status_layanan", kunjungan.statusLayanan)
+                putExtra("nama_anak", kunjungan.namaAnak)
+                putExtra("diagnosa", kunjungan.diagnosa)
+                putExtra("resep_obat", kunjungan.resepObat)
+                putExtra("total_biaya", kunjungan.totalBiaya ?: 0.0)
+                putExtra("metode_pembayaran", kunjungan.metodePembayaran)
+                putExtra("keterangan_pembayaran", kunjungan.keteranganPembayaran)
+                putExtra("bukti_pembayaran", kunjungan.buktiPembayaran)
+            }
+            startActivity(intent)
         }
         binding.rvVerifikasi.layoutManager = LinearLayoutManager(this)
         binding.rvVerifikasi.adapter = adapter
@@ -58,8 +69,8 @@ class VerifikasiPembayaranActivity : AppCompatActivity() {
                 override fun onResponse(call: Call<LayananResponse>, response: Response<LayananResponse>) {
                     binding.swipeRefresh.isRefreshing = false
                     if (response.isSuccessful && response.body()?.status == "success") {
-                        // Filter hanya tampilkan status 3 (Menunggu Pembayaran) & 4 (Lunas)
-                        val list = response.body()!!.data.filter { it.statusLayanan >= 3 }
+                        // Tampilkan status 3 (Input Harga), 5 (Cek Bukti), 6 (Lunas)
+                        val list = response.body()!!.data.filter { it.statusLayanan == 3 || it.statusLayanan >= 5 }
                         adapter.updateData(list)
                         binding.tvEmpty.isVisible = adapter.itemCount == 0
 

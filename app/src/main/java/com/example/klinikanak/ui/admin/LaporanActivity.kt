@@ -37,7 +37,7 @@ class LaporanActivity : AppCompatActivity() {
                 override fun onResponse(call: Call<LayananResponse>, response: Response<LayananResponse>) {
                     if (response.isSuccessful && response.body()?.status == "success") {
                         val data    = response.body()!!.data
-                        val selesai = data.filter { it.statusLayanan >= 4 }
+                        val selesai = data.filter { it.statusLayanan >= 6 }
 
                         val pendapatan = selesai.sumOf { it.totalBiaya ?: 0.0 }
                         val umum       = selesai.count { it.metodePembayaran == "umum" }

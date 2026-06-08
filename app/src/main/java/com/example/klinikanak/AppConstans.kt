@@ -1,7 +1,8 @@
 package com.example.klinikanak
 
 object AppConstants {
-    // Biaya konsultasi klinik (dalam rupiah)
-    // Ubah angka ini jika tarif berubah
     const val BIAYA_KONSULTASI = 150_000
+
+    // GANTI SESUAI NGROK TERBARU KAMU + folder uploads/
+    const val IMAGE_URL = "https://nape-charm-freight.ngrok-free.dev/api/uploads/"
 }

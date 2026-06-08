@@ -49,6 +49,7 @@ class PembayaranActivity : AppCompatActivity() {
                 putExtra("diagnosa", kunjungan.diagnosa ?: "-")
                 putExtra("resep", kunjungan.resepObat ?: "-")
                 putExtra("nama_anak", kunjungan.namaAnak ?: "Pasien")
+                putExtra("total_biaya", kunjungan.totalBiaya ?: 0.0)
             }
             startActivity(intent)
         }
@@ -64,7 +65,7 @@ class PembayaranActivity : AppCompatActivity() {
         binding.swipeRefresh.isRefreshing = true
         val idUser = sessionManager.getUserId().toString()
 
-        ApiClient.instance.getLayanan("pasien", idUser, "3")
+        ApiClient.instance.getLayanan("pasien", idUser, "4")
             .enqueue(object : Callback<LayananResponse> {
                 override fun onResponse(call: Call<LayananResponse>, response: Response<LayananResponse>) {
                     binding.swipeRefresh.isRefreshing = false

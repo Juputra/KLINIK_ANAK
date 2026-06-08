@@ -9,7 +9,9 @@ import retrofit2.Call
 import retrofit2.http.Field
 import retrofit2.http.FormUrlEncoded
 import retrofit2.http.GET
+import retrofit2.http.Multipart
 import retrofit2.http.POST
+import retrofit2.http.Part
 import retrofit2.http.Query
 
 interface ApiService {
@@ -166,6 +168,28 @@ interface ApiService {
         @Field("nama_ortu") namaOrtu: String, // Untuk Pasien
         @Field("nama_anak") namaAnak: String, // Untuk Pasien
         @Field("no_hp") noHp: String          // Untuk Pasien
+    ): Call<ApiResponse>
+    // Tambahkan ini di dalam interface ApiService Anda
+    @Multipart
+    @POST("bayar.php")
+    fun bayarDenganBukti(
+        @Part("id_kunjungan") idKunjungan: okhttp3.RequestBody,
+        @Part("total_biaya") totalBiaya: okhttp3.RequestBody,
+        @Part("metode_pembayaran") metode: okhttp3.RequestBody,
+        @Part("keterangan_pembayaran") keterangan: okhttp3.RequestBody,
+        @Part buktiPembayaran: okhttp3.MultipartBody.Part
+    ): Call<ApiResponse>
+    @FormUrlEncoded
+    @POST("set_harga.php")
+    fun setHarga(
+        @Field("id_kunjungan") idKunjungan: String,
+        @Field("total_biaya") totalBiaya: String
+    ): Call<ApiResponse>
+
+    @FormUrlEncoded
+    @POST("konfirmasi_pembayaran.php")
+    fun konfirmasiPembayaran(
+        @Field("id_kunjungan") idKunjungan: String
     ): Call<ApiResponse>
 }
 

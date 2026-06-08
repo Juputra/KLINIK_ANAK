@@ -48,11 +48,13 @@ class MonitorLayananActivity : AppCompatActivity() {
     private fun setupFilter() {
         val statusOptions = arrayOf(
             "Semua Status",
-            "Menunggu Konfirmasi", // 0
+            "Menunggu Konfirmasi Pendaftaran", // 0
             "Antrean Dokter",      // 1
             "Sedang Diperiksa",    // 2
-            "Menunggu Pembayaran", // 3
-            "Selesai / Lunas"      // 4
+            "Menunggu Input Harga",// 3
+            "Menunggu Pembayaran Pasien", // 4
+            "Menunggu Cek Bukti",  // 5
+            "Selesai / Lunas"     // 4
         )
 
         val spinnerAdapter = ArrayAdapter(this, android.R.layout.simple_spinner_dropdown_item, statusOptions)
@@ -102,12 +104,14 @@ class MonitorLayananActivity : AppCompatActivity() {
 
     private fun applyFilter(filterIndex: Int) {
         val filteredList = when (filterIndex) {
-            1 -> allKunjunganList.filter { it.statusLayanan == 0 } // Menunggu Konfirmasi
-            2 -> allKunjunganList.filter { it.statusLayanan == 1 } // Antrean Dokter
-            3 -> allKunjunganList.filter { it.statusLayanan == 2 } // Sedang Diperiksa
-            4 -> allKunjunganList.filter { it.statusLayanan == 3 } // Menunggu Pembayaran
-            5 -> allKunjunganList.filter { it.statusLayanan >= 4 } // Selesai
-            else -> allKunjunganList // 0 = Semua Status
+            1 -> allKunjunganList.filter { it.statusLayanan == 0 }
+            2 -> allKunjunganList.filter { it.statusLayanan == 1 }
+            3 -> allKunjunganList.filter { it.statusLayanan == 2 }
+            4 -> allKunjunganList.filter { it.statusLayanan == 3 }
+            5 -> allKunjunganList.filter { it.statusLayanan == 4 }
+            6 -> allKunjunganList.filter { it.statusLayanan == 5 }
+            7 -> allKunjunganList.filter { it.statusLayanan == 6 }
+            else -> allKunjunganList
         }
 
         adapter.updateData(filteredList)

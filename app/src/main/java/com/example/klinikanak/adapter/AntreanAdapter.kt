@@ -33,8 +33,10 @@ class AntreanAdapter(
             0 -> "Menunggu Konfirmasi"
             1 -> "Antrean Dokter"
             2 -> "Sedang Diperiksa"
-            3 -> "Menunggu Pembayaran"
-            4 -> "Selesai / Lunas"
+            3 -> "Menunggu Set Harga"
+            4 -> "Menunggu Pembayaran"
+            5 -> "Verifikasi Pembayaran"
+            6 -> "Selesai / Lunas"
             else -> "Selesai"
         }
         holder.binding.tvStatus.text = statusText

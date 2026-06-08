@@ -19,6 +19,7 @@ data class Kunjungan(
     @SerializedName("total_biaya") val totalBiaya: Double?,
     @SerializedName("metode_pembayaran") val metodePembayaran: String?, // enum('umum', 'asuransi')
     @SerializedName("keterangan_pembayaran") val keteranganPembayaran: String?,
+    @SerializedName("bukti_pembayaran") val buktiPembayaran: String?,
     @SerializedName("status_layanan") val statusLayanan: Int, // default 0
     @SerializedName("created_at") val createdAt: String,
     @SerializedName("nama_anak") val namaAnak: String? = null,
