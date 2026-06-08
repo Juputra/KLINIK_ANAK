@@ -68,7 +68,7 @@ class RiwayatPasienActivity : AppCompatActivity() {
                     if (response.isSuccessful && response.body()?.status == "success") {
 
                         // BUG FIX: Filter pasien yang sudah selesai diperiksa (Status 3 ke atas)
-                        val list = response.body()!!.data.filter { it.statusLayanan >= 3 }
+                        val list = response.body()!!.data.filter { it.statusLayanan >= 6 }
                         adapter.updateData(list)
                         binding.tvEmpty.isVisible = adapter.itemCount == 0
 

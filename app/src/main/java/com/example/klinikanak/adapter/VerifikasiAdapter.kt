@@ -38,17 +38,19 @@ class VerifikasiAdapter(
         holder.binding.tvSubtitle1.text = "Tagihan: $biayaFormatted"
         holder.binding.tvSubtitle2.text = "Metode: " + (k.metodePembayaran ?: "Menunggu Pasien")
 
-        val lunas = k.statusLayanan >= 4
+        val lunas = k.statusLayanan == 6
 
         if (lunas) {
             holder.binding.tvStatus.text = "Lunas"
             holder.binding.tvStatus.setBackgroundResource(R.drawable.bg_badge_green)
-            holder.itemView.setOnClickListener(null)
-        } else {
-            holder.binding.tvStatus.text = "Belum Bayar"
+        } else if (k.statusLayanan == 3) {
+            holder.binding.tvStatus.text = "Set Tagihan"
             holder.binding.tvStatus.setBackgroundResource(R.drawable.bg_badge_orange)
-            holder.itemView.setOnClickListener { onItemClick(k) }
+        } else if (k.statusLayanan == 5) {
+            holder.binding.tvStatus.text = "Cek Bukti"
+            holder.binding.tvStatus.setBackgroundResource(R.drawable.bg_badge_blue)
         }
+        holder.itemView.setOnClickListener { onItemClick(k) }
     }
 
     override fun getItemCount(): Int = list.size

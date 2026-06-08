@@ -67,12 +67,12 @@ class StatusLayananActivity : AppCompatActivity() {
                         if (body?.status == "success") {
                             // ✅ FIX 5: Ganti < 3 menjadi < 4
                             // Sekarang status 3 (Menunggu Pembayaran) juga muncul
-                            val listAntrean = body.data.filter { it.statusLayanan < 4 }
+                            val listAntrean = body.data.filter { it.statusLayanan < 6 }
                             adapter.updateData(listAntrean)
                             binding.tvEmpty.isVisible = adapter.itemCount == 0
 
-                            // ✅ FIX 5: Cek apakah ada yang perlu bayar → tampilkan banner
-                            val adaYangHarusBayar = listAntrean.any { it.statusLayanan == 3 }
+                            // Banner HANYA muncul kalau ada tagihan (Status 4)
+                            val adaYangHarusBayar = listAntrean.any { it.statusLayanan == 4 }
                             tampilkanBannerPembayaran(adaYangHarusBayar)
 
                             if (listAntrean.isEmpty()) {

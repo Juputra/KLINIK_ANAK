@@ -20,8 +20,6 @@
             android:orientation="vertical"
             android:padding="24dp">
 
-            <!-- ✅ FIX 9: Card Ringkasan Medis -->
-            <!-- Pasien bisa lihat dulu diagnosa dan resep sebelum membayar -->
             <com.google.android.material.card.MaterialCardView
                 android:layout_width="match_parent"
                 android:layout_height="wrap_content"
@@ -77,7 +75,6 @@
                 </LinearLayout>
             </com.google.android.material.card.MaterialCardView>
 
-            <!-- Card Tagihan -->
             <com.google.android.material.card.MaterialCardView
                 android:layout_width="match_parent"
                 android:layout_height="wrap_content"
@@ -125,38 +122,120 @@
                 </LinearLayout>
             </com.google.android.material.card.MaterialCardView>
 
-            <!-- Pilih Metode Pembayaran -->
             <TextView
                 android:layout_width="wrap_content"
                 android:layout_height="wrap_content"
                 android:layout_marginBottom="12dp"
                 android:text="@string/payment_method"
+                android:textColor="@color/text_main"
                 android:textStyle="bold" />
 
             <RadioGroup
                 android:id="@+id/rgMetode"
                 android:layout_width="match_parent"
                 android:layout_height="wrap_content"
-                android:orientation="vertical">
+                android:orientation="vertical"
+                android:layout_marginBottom="16dp">
 
                 <RadioButton
                     android:id="@+id/rbUmum"
                     android:layout_width="match_parent"
                     android:layout_height="wrap_content"
-                    android:text="@string/cash" />
+                    android:text="Umum (Mandiri / Transfer)" />
 
                 <RadioButton
                     android:id="@+id/rbAsuransi"
                     android:layout_width="match_parent"
                     android:layout_height="wrap_content"
-                    android:text="@string/insurance" />
+                    android:text="Asuransi Kesehatan" />
             </RadioGroup>
+
+            <com.google.android.material.card.MaterialCardView
+                android:id="@+id/layoutUmum"
+                android:layout_width="match_parent"
+                android:layout_height="wrap_content"
+                android:layout_marginBottom="16dp"
+                android:visibility="gone"
+                app:cardCornerRadius="12dp"
+                app:cardElevation="0dp"
+                app:strokeWidth="1dp"
+                app:strokeColor="@color/divider">
+
+                <LinearLayout
+                    android:layout_width="match_parent"
+                    android:layout_height="wrap_content"
+                    android:orientation="vertical"
+                    android:padding="16dp"
+                    android:background="#F8F9FA">
+
+                    <TextView
+                        android:layout_width="wrap_content"
+                        android:layout_height="wrap_content"
+                        android:text="Silakan Transfer ke Virtual Account Klinik:"
+                        android:textSize="13sp"
+                        android:textColor="@color/text_secondary" />
+
+                    <TextView
+                        android:layout_width="wrap_content"
+                        android:layout_height="wrap_content"
+                        android:layout_marginTop="6dp"
+                        android:text="BCA VA: 12345-0897-65432"
+                        android:textColor="#005691"
+                        android:textSize="18sp"
+                        android:textStyle="bold" />
+
+                    <TextView
+                        android:layout_width="wrap_content"
+                        android:layout_height="wrap_content"
+                        android:layout_marginTop="2dp"
+                        android:text="a.n. KLINIK ANAK UTAMA"
+                        android:textColor="@color/text_main"
+                        android:textSize="13sp"
+                        android:textStyle="bold" />
+                </LinearLayout>
+            </com.google.android.material.card.MaterialCardView>
+
+            <LinearLayout
+                android:id="@+id/layoutAsuransi"
+                android:layout_width="match_parent"
+                android:layout_height="wrap_content"
+                android:orientation="vertical"
+                android:visibility="gone"
+                android:layout_marginBottom="16dp">
+
+                <com.google.android.material.textfield.TextInputLayout
+                    style="@style/Widget.MaterialComponents.TextInputLayout.OutlinedBox"
+                    android:layout_width="match_parent"
+                    android:layout_height="wrap_content"
+                    android:layout_marginBottom="12dp"
+                    android:hint="Nama Perusahaan Asuransi (cth: BPJS, Prudential)">
+
+                    <com.google.android.material.textfield.TextInputEditText
+                        android:id="@+id/etNamaAsuransi"
+                        android:layout_width="match_parent"
+                        android:layout_height="wrap_content"
+                        android:inputType="text" />
+                </com.google.android.material.textfield.TextInputLayout>
+
+                <com.google.android.material.textfield.TextInputLayout
+                    style="@style/Widget.MaterialComponents.TextInputLayout.OutlinedBox"
+                    android:layout_width="match_parent"
+                    android:layout_height="wrap_content"
+                    android:hint="Nomor Kartu Anggota Asuransi">
+
+                    <com.google.android.material.textfield.TextInputEditText
+                        android:id="@+id/etNoAsuransi"
+                        android:layout_width="match_parent"
+                        android:layout_height="wrap_content"
+                        android:inputType="number" />
+                </com.google.android.material.textfield.TextInputLayout>
+            </LinearLayout>
 
             <com.google.android.material.textfield.TextInputLayout
                 style="@style/Widget.MaterialComponents.TextInputLayout.OutlinedBox"
                 android:layout_width="match_parent"
                 android:layout_height="wrap_content"
-                android:layout_marginTop="16dp"
+                android:layout_marginBottom="24dp"
                 android:hint="@string/payment_desc_hint">
 
                 <com.google.android.material.textfield.TextInputEditText
@@ -165,11 +244,45 @@
                     android:layout_height="wrap_content" />
             </com.google.android.material.textfield.TextInputLayout>
 
+            <TextView
+                android:layout_width="wrap_content"
+                android:layout_height="wrap_content"
+                android:layout_marginBottom="8dp"
+                android:text="Unggah Bukti Pembayaran / Klaim Kartu"
+                android:textColor="@color/text_main"
+                android:textStyle="bold" />
+
+            <com.google.android.material.button.MaterialButton
+                android:id="@+id/btnPilihFoto"
+                style="@style/Widget.MaterialComponents.Button.OutlinedButton"
+                android:layout_width="wrap_content"
+                android:layout_height="wrap_content"
+                android:text="Pilih Gambar Bukti"
+                android:layout_marginBottom="12dp"/>
+<!--                app:icon="@android:drawable.ic_menu_camera" />-->
+
+            <com.google.android.material.card.MaterialCardView
+                android:layout_width="match_parent"
+                android:layout_height="200dp"
+                android:layout_marginBottom="24dp"
+                app:cardCornerRadius="12dp"
+                app:cardElevation="0dp"
+                app:strokeWidth="1dp"
+                app:strokeColor="@color/divider">
+
+                <ImageView
+                    android:id="@+id/ivPreviewBukti"
+                    android:layout_width="match_parent"
+                    android:layout_height="match_parent"
+                    android:background="#F1F3F5"
+                    android:scaleType="centerInside"/>
+<!--                    android:src="@android:drawable.ic_menu_gallery" />-->
+            </com.google.android.material.card.MaterialCardView>
+
             <com.google.android.material.button.MaterialButton
                 android:id="@+id/btnProsesBayar"
                 android:layout_width="match_parent"
                 android:layout_height="56dp"
-                android:layout_marginTop="32dp"
                 android:text="@string/payment_confirm"
                 app:cornerRadius="12dp" />
 
