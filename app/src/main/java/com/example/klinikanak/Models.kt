@@ -25,7 +25,9 @@ data class Kunjungan(
     @SerializedName("created_at") val createdAt: String,
     @SerializedName("nama_anak") val namaAnak: String? = null,
     @SerializedName("nama_ortu") val namaOrtu: String? = null,
-    @SerializedName("nama_dokter") val namaDokter: String? = null
+    @SerializedName("nama_dokter") val namaDokter: String? = null,
+    @SerializedName("nomor_antrean") val nomorAntrean: Int? = null
+
 )
 
 data class LayananResponse(

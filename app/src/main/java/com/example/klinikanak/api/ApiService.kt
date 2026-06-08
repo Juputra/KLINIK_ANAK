@@ -201,5 +201,12 @@ interface ApiService {
     fun getRiwayatMedisPasien(
         @Query("id_pasien") idPasien: String
     ): Call<LayananResponse>
+    @FormUrlEncoded
+    @POST("batal_kunjungan.php")
+    fun batalKunjungan(
+        @Field("id_kunjungan") idKunjungan: String,
+        @Field("role_pembatal") rolePembatal: String,
+        @Field("alasan") alasan: String
+    ): Call<ApiResponse>
 }
 

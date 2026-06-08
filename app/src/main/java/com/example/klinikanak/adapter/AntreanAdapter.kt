@@ -31,22 +31,29 @@ class AntreanAdapter(
 
         val statusText = when (antrean.statusLayanan) {
             0 -> "Menunggu Konfirmasi"
-            1 -> "Antrean Dokter"
+            1 -> {
+                // Jika nomor antrean ada (tidak null) dan lebih besar dari 0
+                if (antrean.nomorAntrean != null && antrean.nomorAntrean > 0) {
+                    "Antrean Ke-${antrean.nomorAntrean}"
+                } else {
+                    "Antrean Dokter"
+                }
+            }
             2 -> "Sedang Diperiksa"
             3 -> "Menunggu Set Harga"
             4 -> "Menunggu Pembayaran"
             5 -> "Verifikasi Pembayaran"
             6 -> "Selesai / Lunas"
+            99 -> "Dibatalkan"
             else -> "Selesai"
         }
         holder.binding.tvStatus.text = statusText
 
         val bgRes = when (antrean.statusLayanan) {
-            0 -> R.drawable.bg_badge_orange
-            1 -> R.drawable.bg_badge_blue
-            2 -> R.drawable.bg_badge_blue
-            3 -> R.drawable.bg_badge_orange
-            4 -> R.drawable.bg_badge_green
+            0, 3, 4 -> R.drawable.bg_badge_orange // Kuning/Orange untuk yg "Menunggu"
+            1, 2, 5 -> R.drawable.bg_badge_blue   // Biru untuk yang sedang "Aktif diproses"
+            6 -> R.drawable.bg_badge_green        // Hijau untuk Lunas
+            99 -> R.drawable.bg_badge_red
             else -> R.drawable.bg_badge_green
         }
         holder.binding.tvStatus.setBackgroundResource(bgRes)
