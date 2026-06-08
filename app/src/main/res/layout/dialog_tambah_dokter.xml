@@ -1,0 +1,47 @@
+<?xml version="1.0" encoding="utf-8"?>
+<ScrollView xmlns:android="http://schemas.android.com/apk/res/android"
+    android:layout_width="match_parent"
+    android:layout_height="wrap_content">
+
+    <LinearLayout
+        android:layout_width="match_parent"
+        android:layout_height="wrap_content"
+        android:orientation="vertical"
+        android:padding="20dp">
+
+        <EditText
+            android:id="@+id/etNama"
+            android:layout_width="match_parent"
+            android:layout_height="wrap_content"
+            android:hint="Nama Lengkap (cth: dr. Andi, Sp.A)"
+            android:inputType="textPersonName" />
+
+        <EditText
+            android:id="@+id/etUsername"
+            android:layout_width="match_parent"
+            android:layout_height="wrap_content"
+            android:hint="Username (untuk login)"
+            android:inputType="text" />
+
+        <EditText
+            android:id="@+id/etPassword"
+            android:layout_width="match_parent"
+            android:layout_height="wrap_content"
+            android:hint="Password"
+            android:inputType="textPassword" />
+
+        <EditText
+            android:id="@+id/etNoSip"
+            android:layout_width="match_parent"
+            android:layout_height="wrap_content"
+            android:hint="Nomor SIP"
+            android:inputType="text" />
+
+        <EditText
+            android:id="@+id/etSpesialisasi"
+            android:layout_width="match_parent"
+            android:layout_height="wrap_content"
+            android:hint="Spesialisasi"
+            android:inputType="text" />
+    </LinearLayout>
+</ScrollView>

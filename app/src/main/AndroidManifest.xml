@@ -1,0 +1,82 @@
+<?xml version="1.0" encoding="utf-8"?>
+<manifest xmlns:android="http://schemas.android.com/apk/res/android"
+    xmlns:tools="http://schemas.android.com/tools">
+
+    <uses-permission android:name="android.permission.INTERNET" />
+
+    <application
+        android:allowBackup="true"
+        android:dataExtractionRules="@xml/data_extraction_rules"
+        android:fullBackupContent="@xml/backup_rules"
+        android:icon="@mipmap/ic_launcher"
+        android:label="@string/app_name"
+        android:roundIcon="@mipmap/ic_launcher_round"
+        android:supportsRtl="true"
+        android:theme="@style/Theme.KLINIKANAK"
+        tools:targetApi="31">
+        <activity
+            android:name=".ui.pasien.BuatJanjiActivity"
+            android:exported="false" />
+        <activity
+            android:name=".MainActivity"
+            android:exported="false" />
+        <activity
+            android:name=".ui.auth.LoginActivity"
+            android:exported="true">
+            <intent-filter>
+                <action android:name="android.intent.action.MAIN" />
+
+                <category android:name="android.intent.category.LAUNCHER" />
+            </intent-filter>
+        </activity>
+        <activity
+            android:name=".ui.admin.KonfirmasiPendaftaranActivity"
+            android:exported="false" />
+        <activity
+            android:name=".ui.admin.AdminDashboardActivity"
+            android:exported="false" />
+        <activity
+            android:name=".ui.admin.KelolaDokterActivity"
+            android:exported="false" />
+        <activity
+            android:name=".ui.admin.VerifikasiPembayaranActivity"
+            android:exported="false" />
+        <activity
+            android:name=".ui.admin.LaporanActivity"
+            android:exported="false" />
+        <activity
+            android:name=".ui.admin.KelolaAdminActivity"
+            android:exported="false" />
+        <activity
+            android:name=".ui.pasien.PasienDashboardActivity"
+            android:exported="false" />
+        <activity
+            android:name=".ui.auth.RegisterActivity"
+            android:exported="false" />
+        <activity
+            android:name=".ui.pasien.StatusLayananActivity"
+            android:exported="false" />
+        <activity
+            android:name=".ui.pasien.PembayaranActivity"
+            android:exported="false" />
+        <activity
+            android:name=".ui.pasien.PembayaranDetailActivity"
+            android:exported="false" />
+        <activity
+            android:name=".ui.pasien.RiwayatMedisActivity"
+            android:exported="false" />
+        <activity
+            android:name=".ui.dokter.PemeriksaanActivity"
+            android:exported="false" />
+        <activity
+            android:name=".ui.dokter.PemeriksaanDetailActivity"
+            android:exported="false" />
+        <activity
+            android:name=".ui.dokter.RiwayatPasienActivity"
+            android:exported="false" />
+        <activity
+            android:name=".ui.dokter.DokterDashboardActivity"
+            android:exported="false" />
+    </application>
+
+</manifest>

@@ -1,0 +1,61 @@
+<resources>
+    <string name="app_name">KLINIK ANAK</string>
+    <string name="app_title">Klinik Anak Ceria</string>
+
+    <!-- Auth -->
+    <string name="login_title">Masuk ke Akun</string>
+    <string name="login_subtitle">Masukkan kredensial Anda untuk melanjutkan</string>
+    <string name="username">Username</string>
+    <string name="password">Password</string>
+    <string name="login_button">Masuk</string>
+    <string name="no_account">Belum punya akun? </string>
+    <string name="register_now">Daftar Sekarang</string>
+    <string name="register_title">Daftar Akun Baru</string>
+    <string name="register_subtitle">Lengkapi data untuk akses layanan</string>
+    <string name="email">Email</string>
+    <string name="parent_name">Nama Orang Tua</string>
+    <string name="child_name">Nama Anak</string>
+    <string name="phone_number">No HP</string>
+
+    <!-- Dashboards -->
+    <string name="welcome_hello">Halo,</string>
+    <string name="welcome_admin">Administrator</string>
+    <string name="welcome_dokter">Selamat Tugas,</string>
+    <string name="info_title">Info Terkini</string>
+    <string name="info_desc">Klinik buka pukul 08:00 &#8211; 16:00</string>
+    <string name="main_services">Layanan Utama</string>
+    <string name="menu_registration">Pendaftaran</string>
+    <string name="menu_status">Status</string>
+    <string name="menu_payment">Pembayaran</string>
+    <string name="menu_medical_record">Rekam Medis</string>
+
+    <!-- Admin/Dokter Menu -->
+    <string name="admin_center">Admin Center</string>
+    <string name="new_patients">Pasien Baru</string>
+    <string name="pending_payment">Pending Bayar</string>
+    <string name="manage_menu">Menu Kelola</string>
+    <string name="manage_doctors">Kelola Data Dokter</string>
+    <string name="verify_payment">Verifikasi Pembayaran</string>
+    <string name="transaction_report">Laporan Transaksi</string>
+    <string name="active_queue">Antrean Aktif</string>
+    <string name="queue_desc">Ada pasien menunggu pemeriksaan</string>
+    <string name="main_menu">Menu Utama</string>
+    <string name="examination">Pemeriksaan</string>
+    <string name="history">Riwayat</string>
+    <string name="lab_results">Hasil Lab</string>
+    <string name="payment_method">Metode Pembayaran</string>
+    <string name="insurance">Asuransi</string>
+    <string name="cash">Umum/Tunai</string>
+    <string name="diagnosis">Diagnosa</string>
+    <string name="prescription">Resep Obat</string>
+
+    <!-- New Labels for Database integration -->
+    <string name="cost_summary">Ringkasan Biaya</string>
+    <string name="total_bill">Total Tagihan</string>
+    <string name="payment_confirm">Konfirmasi Pembayaran</string>
+    <string name="payment_desc_hint">Keterangan (Opsional)</string>
+    <string name="save_examination">Simpan Pemeriksaan</string>
+    <string name="patient_name_label">Nama Pasien</string>
+    <string name="complaint_label">Keluhan</string>
+    <string name="done">Selesai</string>
+</resources>
