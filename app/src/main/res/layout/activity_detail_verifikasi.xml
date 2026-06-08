@@ -81,6 +81,17 @@
                 android:layout_height="56dp"
                 android:layout_marginTop="24dp"
                 app:cornerRadius="12dp" />
+            <com.google.android.material.button.MaterialButton
+                android:id="@+id/btnTolakBukti"
+                style="@style/Widget.MaterialComponents.Button.OutlinedButton"
+                android:layout_width="match_parent"
+                android:layout_height="56dp"
+                android:layout_marginTop="8dp"
+                android:text="Tolak Bukti (Minta Upload Ulang)"
+                android:textColor="@color/danger_red"
+                app:strokeColor="@color/danger_red"
+                app:cornerRadius="12dp"
+                android:visibility="gone" />
 
         </LinearLayout>
     </ScrollView>
