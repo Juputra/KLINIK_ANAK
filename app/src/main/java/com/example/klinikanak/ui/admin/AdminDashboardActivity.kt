@@ -2,6 +2,7 @@ package com.example.klinikanak.ui.admin
 
 import android.content.Intent
 import android.os.Bundle
+import androidx.appcompat.app.AlertDialog
 import androidx.appcompat.app.AppCompatActivity
 import com.example.klinikanak.LayananResponse
 import com.example.klinikanak.api.ApiClient
@@ -26,9 +27,16 @@ class AdminDashboardActivity : AppCompatActivity() {
         binding.tvNamaAdmin.text = sessionManager.getNama()
 
         binding.btnLogoutAdmin.setOnClickListener {
-            sessionManager.logout()
-            startActivity(Intent(this, LoginActivity::class.java))
-            finish()
+            AlertDialog.Builder(this)
+                .setTitle("Konfirmasi Keluar")
+                .setMessage("Apakah Anda yakin ingin keluar dari akun ini?")
+                .setPositiveButton("Ya, Keluar") { _, _ ->
+                    sessionManager.logout()
+                    startActivity(Intent(this, LoginActivity::class.java))
+                    finish()
+                }
+                .setNegativeButton("Batal", null)
+                .show()
         }
 
         binding.menuKonfirmasiPendaftaran.setOnClickListener {
