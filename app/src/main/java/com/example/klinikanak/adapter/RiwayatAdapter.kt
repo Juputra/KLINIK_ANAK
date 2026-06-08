@@ -8,8 +8,10 @@ import com.example.klinikanak.R
 import com.example.klinikanak.databinding.ItemRiwayatBinding
 import com.example.klinikanak.utils.FormatHelper
 
-class RiwayatAdapter(private var listRiwayat: List<Kunjungan>) :
-    RecyclerView.Adapter<RiwayatAdapter.ViewHolder>() {
+class RiwayatAdapter(
+    private var listRiwayat: List<Kunjungan>,
+    private val onItemClick: ((Kunjungan) -> Unit)? = null // Tambahan parameter aksi klik
+) : RecyclerView.Adapter<RiwayatAdapter.ViewHolder>() {
 
     class ViewHolder(val binding: ItemRiwayatBinding) : RecyclerView.ViewHolder(binding.root)
 
@@ -21,7 +23,6 @@ class RiwayatAdapter(private var listRiwayat: List<Kunjungan>) :
     override fun onBindViewHolder(holder: ViewHolder, position: Int) {
         val riwayat = listRiwayat[position]
 
-        // ✅ FIX 8: Format tanggal "2025-06-08" → "08 Jun 2025"
         val tanggalFormatted = FormatHelper.formatTanggal(riwayat.tanggalKunjungan)
         holder.binding.tvTitle.text = (riwayat.namaAnak ?: "Pasien") + "  •  " + tanggalFormatted
 
@@ -30,6 +31,11 @@ class RiwayatAdapter(private var listRiwayat: List<Kunjungan>) :
 
         holder.binding.tvStatus.text = "Selesai"
         holder.binding.tvStatus.setBackgroundResource(R.drawable.bg_badge_green)
+
+        // Terapkan aksi klik ke seluruh area card
+        holder.itemView.setOnClickListener {
+            onItemClick?.invoke(riwayat)
+        }
     }
 
     override fun getItemCount(): Int = listRiwayat.size
