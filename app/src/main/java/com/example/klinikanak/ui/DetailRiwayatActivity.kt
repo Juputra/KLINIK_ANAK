@@ -26,7 +26,16 @@ class DetailRiwayatActivity : AppCompatActivity() {
         val diagnosa = intent.getStringExtra("diagnosa") ?: "-"
         val resep = intent.getStringExtra("resep") ?: "-"
         val biaya = intent.getDoubleExtra("biaya", 0.0)
-        val fileBukti = intent.getStringExtra("bukti_pembayaran") // Tangkap nama file gambar
+        val fileBukti = intent.getStringExtra("bukti_pembayaran")
+        val catatanAdmin = intent.getStringExtra("catatan_admin") ?: ""
+
+        // Logika Banner Dibatalkan (Cek apakah di dalam catatan ada tulisan 'Dibatalkan')
+        if (catatanAdmin.contains("Dibatalkan", ignoreCase = true)) {
+            binding.tvBannerBatal.visibility = View.VISIBLE
+            binding.tvBannerBatal.text = "⚠️ $catatanAdmin"
+        } else {
+            binding.tvBannerBatal.visibility = View.GONE
+        }// Tangkap nama file gambar
 
         // 2. Terapkan Format
         binding.tvNamaPasien.text = "Nama Pasien: $namaAnak"
@@ -43,6 +52,7 @@ class DetailRiwayatActivity : AppCompatActivity() {
 
             // URL Gambar (Gunakan URL Ngrok yang ada di AppConstants)
             val imageUrl = AppConstants.IMAGE_URL + fileBukti
+
 
             Glide.with(this)
                 .load(imageUrl)

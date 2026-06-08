@@ -45,11 +45,47 @@ class StatusLayananActivity : AppCompatActivity() {
 
     private fun setupRecyclerView() {
         // Pasien hanya lihat, tidak perlu onItemClick
-        adapter = AntreanAdapter(emptyList())
+        adapter = AntreanAdapter(emptyList()) { kunjungan ->
+            // Pasien hanya bisa klik jika statusnya masih 0 (Menunggu Konfirmasi)
+            if (kunjungan.statusLayanan == 0) {
+                tampilkanDialogBatalPasien(kunjungan)
+            }
+        }
         binding.rvAntrean.layoutManager = LinearLayoutManager(this)
         binding.rvAntrean.adapter = adapter
     }
+    private fun tampilkanDialogBatalPasien(kunjungan: Kunjungan) {
+        val input = android.widget.EditText(this).apply {
+            hint = "Alasan batal (cth: Berhalangan hadir)"
+            setPadding(40, 40, 40, 40)
+        }
 
+        androidx.appcompat.app.AlertDialog.Builder(this)
+            .setTitle("Batalkan Janji Medis?")
+            .setMessage("Apakah Anda yakin ingin membatalkan antrean ini?")
+            .setView(input)
+            .setPositiveButton("Ya, Batalkan") { _, _ ->
+                val alasan = input.text.toString().trim()
+                prosesBatal(kunjungan.idKunjungan.toString(), "pasien", if (alasan.isEmpty()) "Dibatalkan sepihak oleh pasien" else alasan)
+            }
+            .setNegativeButton("Tutup", null)
+            .show()
+    }
+    private fun prosesBatal(idKunjungan: String, role: String, alasan: String) {
+        binding.swipeRefresh.isRefreshing = true
+        ApiClient.instance.batalKunjungan(idKunjungan, role, alasan).enqueue(object : Callback<ApiResponse> {
+            override fun onResponse(call: Call<ApiResponse>, response: Response<ApiResponse>) {
+                if (response.isSuccessful && response.body()?.status == "success") {
+                    Toast.makeText(this@StatusLayananActivity, "Janji berhasil dibatalkan", Toast.LENGTH_SHORT).show()
+                    fetchData() // Refresh list
+                }
+            }
+            override fun onFailure(call: Call<ApiResponse>, t: Throwable) {
+                binding.swipeRefresh.isRefreshing = false
+                Toast.makeText(this@StatusLayananActivity, "Koneksi Gagal", Toast.LENGTH_SHORT).show()
+            }
+        })
+    }
     private fun setupSwipeRefresh() {
         binding.swipeRefresh.setOnRefreshListener { fetchData() }
     }

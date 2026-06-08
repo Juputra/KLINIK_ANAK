@@ -70,14 +70,16 @@ class RiwayatMedisActivity : AppCompatActivity() {
         val idUser = sessionManager.getUserId().toString()
 
         // BUG FIX: Ubah dari "3" menjadi "4" agar hanya yang LUNAS yang masuk rekam medis!
-        ApiClient.instance.getLayanan("pasien", idUser, "6")
+        ApiClient.instance.getLayanan("pasien", idUser, null)
             .enqueue(object : Callback<LayananResponse> {
                 override fun onResponse(call: Call<LayananResponse>, response: Response<LayananResponse>) {
                     binding.swipeRefresh.isRefreshing = false
                     if (response.isSuccessful) {
                         val body = response.body()
                         if (body?.status == "success") {
-                            adapter.updateData(body.data)
+                            // 👇 Tampilkan hanya yang Lunas (6) ATAU Dibatalkan (99)
+                            val listFilter = body.data.filter { it.statusLayanan == 6 || it.statusLayanan == 99 }
+                            adapter.updateData(listFilter)
                             binding.tvEmpty.isVisible = adapter.itemCount == 0
                             if (body.data.isEmpty()) {
                                 Toast.makeText(this@RiwayatMedisActivity, "Belum ada riwayat medis (Atau belum lunas)", Toast.LENGTH_SHORT).show()

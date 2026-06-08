@@ -54,7 +54,8 @@ class MonitorLayananActivity : AppCompatActivity() {
             "Menunggu Input Harga",// 3
             "Menunggu Pembayaran Pasien", // 4
             "Menunggu Cek Bukti",  // 5
-            "Selesai / Lunas"     // 4
+            "Selesai / Lunas",
+            "Dibatalkan / Ditolak"// 4
         )
 
         val spinnerAdapter = ArrayAdapter(this, android.R.layout.simple_spinner_dropdown_item, statusOptions)
@@ -111,6 +112,7 @@ class MonitorLayananActivity : AppCompatActivity() {
             5 -> allKunjunganList.filter { it.statusLayanan == 4 }
             6 -> allKunjunganList.filter { it.statusLayanan == 5 }
             7 -> allKunjunganList.filter { it.statusLayanan == 6 }
+            8 -> allKunjunganList.filter { it.statusLayanan == 99 }
             else -> allKunjunganList
         }
 

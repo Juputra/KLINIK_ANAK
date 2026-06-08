@@ -31,6 +31,8 @@ class RiwayatAdapter(
 
         holder.binding.tvStatus.text = "Selesai"
         holder.binding.tvStatus.setBackgroundResource(R.drawable.bg_badge_green)
+        holder.binding.tvStatus.text = "Dibatalkan"
+        holder.binding.tvStatus.setBackgroundResource(R.drawable.bg_badge_red)
 
         // Terapkan aksi klik ke seluruh area card
         holder.itemView.setOnClickListener {

@@ -76,12 +76,48 @@ class KonfirmasiPendaftaranActivity : AppCompatActivity() {
     }
 
     private fun tampilkanDialogKonfirmasi(kunjungan: Kunjungan) {
-        AlertDialog.Builder(this)
+        androidx.appcompat.app.AlertDialog.Builder(this)
             .setTitle("Konfirmasi Pendaftaran")
-            .setMessage("Loloskan kunjungan #${kunjungan.idKunjungan} ke antrean dokter?")
-            .setPositiveButton("Ya, Konfirmasi") { _, _ -> konfirmasi(kunjungan.idKunjungan.toString()) }
-            .setNegativeButton("Batal", null)
+            .setMessage("Pendaftaran atas nama ${kunjungan.namaAnak}.\nSilakan pilih tindakan:")
+            .setPositiveButton("Terima (Antre)") { _, _ -> konfirmasi(kunjungan.idKunjungan.toString()) }
+            .setNegativeButton("Tolak") { _, _ -> tampilkanDialogTolakAdmin(kunjungan) }
+            .setNeutralButton("Batal", null)
             .show()
+    }
+    private fun tampilkanDialogTolakAdmin(kunjungan: Kunjungan) {
+        val input = android.widget.EditText(this).apply {
+            hint = "Alasan tolak (cth: Dokter Cuti / Jadwal Penuh)"
+            setPadding(40, 40, 40, 40)
+        }
+
+        androidx.appcompat.app.AlertDialog.Builder(this)
+            .setTitle("Tolak Pendaftaran")
+            .setView(input)
+            .setPositiveButton("Tolak Pasien") { _, _ ->
+                val alasan = input.text.toString().trim()
+                if (alasan.isEmpty()) {
+                    Toast.makeText(this, "Alasan tolak wajib diisi!", Toast.LENGTH_SHORT).show()
+                } else {
+                    prosesTolak(kunjungan.idKunjungan.toString(), "admin", alasan)
+                }
+            }
+            .setNegativeButton("Kembali", null)
+            .show()
+    }
+    private fun prosesTolak(idKunjungan: String, role: String, alasan: String) {
+        binding.swipeRefresh.isRefreshing = true
+        ApiClient.instance.batalKunjungan(idKunjungan, role, alasan).enqueue(object : Callback<ApiResponse> {
+            override fun onResponse(call: Call<ApiResponse>, response: Response<ApiResponse>) {
+                if (response.isSuccessful && response.body()?.status == "success") {
+                    Toast.makeText(this@KonfirmasiPendaftaranActivity, "Pasien ditolak", Toast.LENGTH_SHORT).show()
+                    fetchData()
+                }
+            }
+            override fun onFailure(call: Call<ApiResponse>, t: Throwable) {
+                binding.swipeRefresh.isRefreshing = false
+                Toast.makeText(this@KonfirmasiPendaftaranActivity, "Koneksi Gagal", Toast.LENGTH_SHORT).show()
+            }
+        })
     }
 
     private fun konfirmasi(idKunjungan: String) {
