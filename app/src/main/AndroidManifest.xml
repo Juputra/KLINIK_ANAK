@@ -78,6 +78,7 @@
             android:name=".ui.dokter.DokterDashboardActivity"
             android:exported="false" />
         <activity android:name=".ui.admin.MonitorLayananActivity" />
+        <activity android:name=".ui.auth.ProfileActivity" />
     </application>
 
 </manifest>

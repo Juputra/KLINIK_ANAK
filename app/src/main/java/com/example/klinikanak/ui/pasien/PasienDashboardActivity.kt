@@ -6,6 +6,7 @@ import androidx.appcompat.app.AlertDialog
 import androidx.appcompat.app.AppCompatActivity
 import com.example.klinikanak.databinding.ActivityPasienDashboardBinding
 import com.example.klinikanak.ui.auth.LoginActivity
+import com.example.klinikanak.ui.auth.ProfileActivity
 import com.example.klinikanak.utils.SessionManager
 
 class PasienDashboardActivity : AppCompatActivity() {
@@ -52,6 +53,9 @@ class PasienDashboardActivity : AppCompatActivity() {
 
         binding.menuRiwayat.setOnClickListener {
             startActivity(Intent(this, RiwayatMedisActivity::class.java))
+        }
+        binding.tvNamaUser.setOnClickListener {
+            startActivity(Intent(this, ProfileActivity::class.java))
         }
     }
 }
