@@ -125,5 +125,25 @@ interface ApiService {
     fun hapusKunjungan(
         @Field("id_kunjungan") idKunjungan: String
     ): Call<ApiResponse>
+    @GET("get_profil.php")
+    fun getProfil(
+        @Query("role") role: String,
+        @Query("id_user") idUser: String
+    ): Call<LoginResponse>
+
+    @FormUrlEncoded
+    @POST("update_profil.php")
+    fun updateProfil(
+        @Field("role") role: String,
+        @Field("id_user") idUser: String,
+        @Field("password") password: String,
+        @Field("password_lama") passwordLama: String,
+        @Field("nama") nama: String,          // Untuk Dokter
+        @Field("no_sip") noSip: String,       // Untuk Dokter
+        @Field("spesialisasi") spesialisasi: String, // Untuk Dokter
+        @Field("nama_ortu") namaOrtu: String, // Untuk Pasien
+        @Field("nama_anak") namaAnak: String, // Untuk Pasien
+        @Field("no_hp") noHp: String          // Untuk Pasien
+    ): Call<ApiResponse>
 }
 
