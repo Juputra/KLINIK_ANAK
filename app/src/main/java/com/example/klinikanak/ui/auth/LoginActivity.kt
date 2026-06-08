@@ -2,9 +2,13 @@ package com.example.klinikanak.ui.auth
 
 import android.content.Intent
 import android.os.Bundle
-import android.view.View
+import android.text.InputType
+import android.widget.EditText
+import android.widget.LinearLayout
 import android.widget.Toast
+import androidx.appcompat.app.AlertDialog
 import androidx.appcompat.app.AppCompatActivity
+import com.example.klinikanak.ApiResponse
 import com.example.klinikanak.api.ApiClient
 import com.example.klinikanak.databinding.ActivityLoginBinding
 import com.example.klinikanak.model.LoginResponse
@@ -66,7 +70,7 @@ class LoginActivity : AppCompatActivity() {
                         if (loginBody?.status == "success") {
                             val role = loginBody.role
                             val data = loginBody.data
-                            
+
                             val idStr = if (role == "pasien") data?.idPasien else data?.idUser
                             val id = idStr?.toIntOrNull() ?: 0
                             val nama = if (role == "pasien") data?.namaAnak ?: "Pasien" else data?.namaLengkap ?: "User"
@@ -78,12 +82,10 @@ class LoginActivity : AppCompatActivity() {
                             Toast.makeText(this@LoginActivity, "Selamat datang, $nama", Toast.LENGTH_SHORT).show()
                             arahkankeDashboard(role)
                         } else {
-                            // Jika status "error" dari PHP
                             val errorMessage = loginBody?.message ?: "Username atau Password Salah"
                             Toast.makeText(this@LoginActivity, errorMessage, Toast.LENGTH_SHORT).show()
                         }
                     } else {
-                        // Jika server mengembalikan error code (misal 404, 500)
                         Toast.makeText(this@LoginActivity, "Error Server: ${response.code()}", Toast.LENGTH_SHORT).show()
                     }
                 }
@@ -91,7 +93,6 @@ class LoginActivity : AppCompatActivity() {
                 override fun onFailure(call: Call<LoginResponse>, t: Throwable) {
                     binding.btnLogin.text = "Masuk"
                     binding.btnLogin.isEnabled = true
-                    // Cek logcat untuk detail error koneksi
                     Toast.makeText(this@LoginActivity, "Koneksi Gagal: ${t.message}", Toast.LENGTH_LONG).show()
                 }
             })
@@ -100,6 +101,61 @@ class LoginActivity : AppCompatActivity() {
         // Aksi Teks Daftar Pasien
         binding.tvDaftarPasien.setOnClickListener {
             startActivity(Intent(this, RegisterActivity::class.java))
+        }
+
+        // Aksi Teks Lupa Password (reset password berfungsi)
+        binding.tvLupaPassword.setOnClickListener {
+            val ctx = this
+
+            val wadah = LinearLayout(ctx).apply {
+                orientation = LinearLayout.VERTICAL
+                setPadding(60, 20, 60, 0)
+            }
+            val inputId = EditText(ctx).apply {
+                hint = "Username / Email akun"
+                inputType = InputType.TYPE_CLASS_TEXT
+            }
+            val inputPass = EditText(ctx).apply {
+                hint = "Password baru"
+                inputType = InputType.TYPE_CLASS_TEXT or InputType.TYPE_TEXT_VARIATION_PASSWORD
+            }
+            wadah.addView(inputId)
+            wadah.addView(inputPass)
+
+            AlertDialog.Builder(ctx)
+                .setTitle("Reset Password")
+                .setMessage("Masukkan username/email akunmu dan password baru.")
+                .setView(wadah)
+                .setPositiveButton("Simpan") { _, _ ->
+                    val identitas = inputId.text.toString().trim()
+                    val passBaru = inputPass.text.toString().trim()
+
+                    if (identitas.isEmpty() || passBaru.isEmpty()) {
+                        Toast.makeText(ctx, "Semua kolom harus diisi", Toast.LENGTH_SHORT).show()
+                        return@setPositiveButton
+                    }
+                    if (passBaru.length < 5) {
+                        Toast.makeText(ctx, "Password minimal 5 karakter", Toast.LENGTH_SHORT).show()
+                        return@setPositiveButton
+                    }
+
+                    ApiClient.instance.resetPassword(identitas, passBaru)
+                        .enqueue(object : Callback<ApiResponse> {
+                            override fun onResponse(call: Call<ApiResponse>, response: Response<ApiResponse>) {
+                                val body = response.body()
+                                if (body?.status == "success") {
+                                    Toast.makeText(ctx, "Password berhasil diubah. Silakan login.", Toast.LENGTH_LONG).show()
+                                } else {
+                                    Toast.makeText(ctx, body?.message ?: "Gagal reset password", Toast.LENGTH_SHORT).show()
+                                }
+                            }
+                            override fun onFailure(call: Call<ApiResponse>, t: Throwable) {
+                                Toast.makeText(ctx, "Koneksi gagal: ${t.message}", Toast.LENGTH_LONG).show()
+                            }
+                        })
+                }
+                .setNegativeButton("Batal", null)
+                .show()
         }
     }
 
@@ -114,7 +170,7 @@ class LoginActivity : AppCompatActivity() {
 
         if (intent != null) {
             startActivity(intent)
-            finish() // Agar user tidak bisa kembali ke halaman login jika menekan tombol 'Back' di HP
+            finish()
         }
     }
 }

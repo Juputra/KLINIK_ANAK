@@ -208,5 +208,13 @@ interface ApiService {
         @Field("role_pembatal") rolePembatal: String,
         @Field("alasan") alasan: String
     ): Call<ApiResponse>
+
+    @FormUrlEncoded
+    @POST("reset_password.php")
+    fun resetPassword(
+        @Field("identitas") identitas: String,
+        @Field("password_baru") passwordBaru: String
+    ): Call<ApiResponse>
 }
+
 
