@@ -1,6 +1,7 @@
 <?xml version="1.0" encoding="utf-8"?>
 <resources>
     <!-- Primary -->
+    <color name="bg_pasien">#abd8ff</color>
     <color name="primary_blue">#3B82F6</color>
     <color name="primary_dark_blue">#2563EB</color>
     <color name="secondary_green">#22C55E</color>

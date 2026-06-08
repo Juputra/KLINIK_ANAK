@@ -22,6 +22,13 @@
                 android:background="@drawable/gradient_blue_header"
                 android:padding="24dp">
 
+                <ImageView
+                    android:layout_width="wrap_content"
+                    android:layout_height="60dp"
+                    android:adjustViewBounds="true"
+                    android:src="@drawable/ic_text_little_hearts"
+                    android:translationX="-44dp"/>
+
                 <LinearLayout
                     android:layout_width="wrap_content"
                     android:layout_height="wrap_content"
@@ -34,6 +41,7 @@
                         android:text="@string/welcome_hello"
                         android:textColor="@color/white"
                         android:textSize="18sp" />
+
 
                     <TextView
                         android:id="@+id/tvNamaUser"

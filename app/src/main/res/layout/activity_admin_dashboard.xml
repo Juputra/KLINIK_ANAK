@@ -262,7 +262,7 @@
                         android:layout_height="24dp"
                         android:layout_marginStart="-36dp"
                         android:contentDescription="Monitor Seluruh Proses"
-                        android:src="@drawable/ic_chart"
+                        android:src="@drawable/ic_monitor"
                         app:tint="@color/primary_blue" />
                     <TextView
                         android:layout_width="wrap_content"
