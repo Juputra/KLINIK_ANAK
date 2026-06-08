@@ -6,6 +6,7 @@ import androidx.recyclerview.widget.RecyclerView
 import com.example.klinikanak.Kunjungan
 import com.example.klinikanak.R
 import com.example.klinikanak.databinding.ItemRiwayatBinding
+import com.example.klinikanak.utils.FormatHelper
 
 class AntreanAdapter(
     private var listAntrean: List<Kunjungan>,
@@ -22,12 +23,13 @@ class AntreanAdapter(
     override fun onBindViewHolder(holder: ViewHolder, position: Int) {
         val antrean = listAntrean[position]
 
-        // CLEAN CODE: Memanggil ID yang benar
-        holder.binding.tvTitle.text = antrean.namaAnak ?: "Pasien #${antrean.idPasien}"
+        holder.binding.tvTitle.text   = antrean.namaAnak ?: "Pasien #${antrean.idPasien}"
         holder.binding.tvSubtitle1.text = "Keluhan: ${antrean.keluhanAwal}"
-        holder.binding.tvSubtitle2.text = "Tanggal: ${antrean.tanggalKunjungan}"
 
-        val statusText = when(antrean.statusLayanan) {
+        // ✅ FIX 8: Format tanggal "2025-06-08" → "08 Jun 2025"
+        holder.binding.tvSubtitle2.text = "Tanggal: ${FormatHelper.formatTanggal(antrean.tanggalKunjungan)}"
+
+        val statusText = when (antrean.statusLayanan) {
             0 -> "Menunggu Konfirmasi"
             1 -> "Antrean Dokter"
             2 -> "Sedang Diperiksa"
@@ -37,7 +39,7 @@ class AntreanAdapter(
         }
         holder.binding.tvStatus.text = statusText
 
-        val bgRes = when(antrean.statusLayanan) {
+        val bgRes = when (antrean.statusLayanan) {
             0 -> R.drawable.bg_badge_orange
             1 -> R.drawable.bg_badge_blue
             2 -> R.drawable.bg_badge_blue

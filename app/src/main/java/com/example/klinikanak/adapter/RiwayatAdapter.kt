@@ -6,6 +6,7 @@ import androidx.recyclerview.widget.RecyclerView
 import com.example.klinikanak.Kunjungan
 import com.example.klinikanak.R
 import com.example.klinikanak.databinding.ItemRiwayatBinding
+import com.example.klinikanak.utils.FormatHelper
 
 class RiwayatAdapter(private var listRiwayat: List<Kunjungan>) :
     RecyclerView.Adapter<RiwayatAdapter.ViewHolder>() {
@@ -20,7 +21,10 @@ class RiwayatAdapter(private var listRiwayat: List<Kunjungan>) :
     override fun onBindViewHolder(holder: ViewHolder, position: Int) {
         val riwayat = listRiwayat[position]
 
-        holder.binding.tvTitle.text = (riwayat.namaAnak ?: "Pasien") + "  •  " + riwayat.tanggalKunjungan
+        // ✅ FIX 8: Format tanggal "2025-06-08" → "08 Jun 2025"
+        val tanggalFormatted = FormatHelper.formatTanggal(riwayat.tanggalKunjungan)
+        holder.binding.tvTitle.text = (riwayat.namaAnak ?: "Pasien") + "  •  " + tanggalFormatted
+
         holder.binding.tvSubtitle1.text = "Diagnosa: " + (riwayat.diagnosa ?: "-")
         holder.binding.tvSubtitle2.text = "Resep: " + (riwayat.resepObat ?: "-")
 

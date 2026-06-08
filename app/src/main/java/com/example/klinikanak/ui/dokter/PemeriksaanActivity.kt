@@ -26,11 +26,9 @@ class PemeriksaanActivity : AppCompatActivity() {
         setContentView(binding.root)
 
         sessionManager = SessionManager(this)
-        
         setupToolbar()
         setupRecyclerView()
         setupSwipeRefresh()
-        
         fetchData()
     }
 
@@ -45,10 +43,13 @@ class PemeriksaanActivity : AppCompatActivity() {
 
     private fun setupRecyclerView() {
         adapter = AntreanAdapter(emptyList()) { kunjungan ->
-            // Buka Detail Pemeriksaan
-            val intent = Intent(this, PemeriksaanDetailActivity::class.java)
-            intent.putExtra("id_kunjungan", kunjungan.idKunjungan.toString())
-            intent.putExtra("keluhan", kunjungan.keluhanAwal)
+            // ✅ FIX: Kirim semua data yang dibutuhkan ke PemeriksaanDetailActivity
+            val intent = Intent(this, PemeriksaanDetailActivity::class.java).apply {
+                putExtra("id_kunjungan", kunjungan.idKunjungan.toString())
+                putExtra("keluhan", kunjungan.keluhanAwal)
+                putExtra("nama_anak", kunjungan.namaAnak ?: "Pasien #${kunjungan.idPasien}")
+                putExtra("nama_ortu", kunjungan.namaOrtu ?: "-")
+            }
             startActivity(intent)
         }
         binding.rvPemeriksaan.layoutManager = LinearLayoutManager(this)
@@ -56,16 +57,14 @@ class PemeriksaanActivity : AppCompatActivity() {
     }
 
     private fun setupSwipeRefresh() {
-        binding.swipeRefresh.setOnRefreshListener {
-            fetchData()
-        }
+        binding.swipeRefresh.setOnRefreshListener { fetchData() }
     }
 
     private fun fetchData() {
         binding.swipeRefresh.isRefreshing = true
         val idUser = sessionManager.getUserId().toString()
-        
-        ApiClient.instance.getLayanan("dokter", idUser, "1") // 0 = Menunggu
+
+        ApiClient.instance.getLayanan("dokter", idUser, "1")
             .enqueue(object : Callback<LayananResponse> {
                 override fun onResponse(call: Call<LayananResponse>, response: Response<LayananResponse>) {
                     binding.swipeRefresh.isRefreshing = false
@@ -88,7 +87,7 @@ class PemeriksaanActivity : AppCompatActivity() {
                 }
             })
     }
-    
+
     override fun onResume() {
         super.onResume()
         fetchData()

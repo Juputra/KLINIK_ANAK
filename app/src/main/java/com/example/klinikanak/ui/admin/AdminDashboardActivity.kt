@@ -50,7 +50,7 @@ class AdminDashboardActivity : AppCompatActivity() {
 
     override fun onResume() {
         super.onResume()
-        loadStatistik() // refresh angka tiap kembali ke dashboard
+        loadStatistik()
     }
 
     private fun loadStatistik() {
@@ -59,12 +59,17 @@ class AdminDashboardActivity : AppCompatActivity() {
                 override fun onResponse(call: Call<LayananResponse>, response: Response<LayananResponse>) {
                     if (response.isSuccessful && response.body()?.status == "success") {
                         val data = response.body()!!.data
+
+                        // Pasien baru yang menunggu konfirmasi admin (status 0)
                         binding.tvStatPendaftaran.text = data.count { it.statusLayanan == 0 }.toString()
-                        binding.tvStatPembayaran.text = data.count { it.statusLayanan == 2 }.toString()
+
+                        // ✅ FIX 2: Ganti dari == 2 ke == 3
+                        // status 3 = "Menunggu Pembayaran" (bukan 2 = "Sedang Diperiksa")
+                        binding.tvStatPembayaran.text = data.count { it.statusLayanan == 3 }.toString()
                     }
                 }
                 override fun onFailure(call: Call<LayananResponse>, t: Throwable) {
-                    // statistik opsional; abaikan jika gagal
+                    // Statistik opsional, abaikan jika gagal
                 }
             })
     }

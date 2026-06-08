@@ -2,6 +2,7 @@ package com.example.klinikanak.ui.dokter
 
 import android.os.Bundle
 import android.widget.Toast
+import androidx.appcompat.app.AlertDialog
 import androidx.appcompat.app.AppCompatActivity
 import com.example.klinikanak.ApiResponse
 import com.example.klinikanak.api.ApiClient
@@ -20,15 +21,20 @@ class PemeriksaanDetailActivity : AppCompatActivity() {
         setContentView(binding.root)
 
         idKunjungan = intent.getStringExtra("id_kunjungan")
-        val keluhan = intent.getStringExtra("keluhan")
+        val keluhan   = intent.getStringExtra("keluhan") ?: "-"
+        val namaAnak  = intent.getStringExtra("nama_anak") ?: "Pasien"
+        val namaOrtu  = intent.getStringExtra("nama_ortu") ?: "-"
 
-        binding.tvKeluhan.text = "Keluhan: $keluhan"
-        binding.tvNamaAnak.text = "ID Kunjungan: $idKunjungan"
+        // ✅ FIX 1: Tampilkan nama anak yang sebenarnya, bukan ID kunjungan
+        binding.tvNamaAnak.text = namaAnak
+        // Tampilkan nama orang tua dan keluhan
+        binding.tvKeluhan.text  = "Keluhan: $keluhan\nOrang tua: $namaOrtu"
 
         setupToolbar()
 
+        // ✅ FIX 4: Klik tombol → tampilkan dialog konfirmasi dulu
         binding.btnSimpanPemeriksaan.setOnClickListener {
-            simpanPemeriksaan()
+            tampilkanDialogKonfirmasi()
         }
     }
 
@@ -41,15 +47,32 @@ class PemeriksaanDetailActivity : AppCompatActivity() {
         }
     }
 
-    private fun simpanPemeriksaan() {
+    // ✅ FIX 4: Dialog konfirmasi sebelum menyimpan data medis
+    private fun tampilkanDialogKonfirmasi() {
         val diagnosa = binding.etDiagnosa.text.toString().trim()
-        val resep = binding.etResep.text.toString().trim()
+        val resep    = binding.etResep.text.toString().trim()
 
         if (diagnosa.isEmpty() || resep.isEmpty()) {
             Toast.makeText(this, "Harap isi diagnosa dan resep", Toast.LENGTH_SHORT).show()
             return
         }
 
+        AlertDialog.Builder(this)
+            .setTitle("Konfirmasi Pemeriksaan")
+            .setMessage(
+                "Pastikan data sudah benar sebelum disimpan:\n\n" +
+                        "Diagnosa: $diagnosa\n\n" +
+                        "Resep: $resep\n\n" +
+                        "Data yang sudah tersimpan tidak dapat diedit."
+            )
+            .setPositiveButton("Ya, Simpan") { _, _ ->
+                simpanPemeriksaan(diagnosa, resep)
+            }
+            .setNegativeButton("Periksa Ulang", null)
+            .show()
+    }
+
+    private fun simpanPemeriksaan(diagnosa: String, resep: String) {
         binding.btnSimpanPemeriksaan.isEnabled = false
         binding.btnSimpanPemeriksaan.text = "Menyimpan..."
 
@@ -61,17 +84,29 @@ class PemeriksaanDetailActivity : AppCompatActivity() {
                         binding.btnSimpanPemeriksaan.text = "Simpan Pemeriksaan"
 
                         if (response.isSuccessful && response.body()?.status == "success") {
-                            Toast.makeText(this@PemeriksaanDetailActivity, "Pemeriksaan berhasil disimpan", Toast.LENGTH_SHORT).show()
+                            Toast.makeText(
+                                this@PemeriksaanDetailActivity,
+                                "Pemeriksaan berhasil disimpan",
+                                Toast.LENGTH_SHORT
+                            ).show()
                             finish()
                         } else {
-                            Toast.makeText(this@PemeriksaanDetailActivity, "Gagal menyimpan", Toast.LENGTH_SHORT).show()
+                            Toast.makeText(
+                                this@PemeriksaanDetailActivity,
+                                "Gagal menyimpan: ${response.body()?.message ?: "Error"}",
+                                Toast.LENGTH_SHORT
+                            ).show()
                         }
                     }
 
                     override fun onFailure(call: Call<ApiResponse>, t: Throwable) {
                         binding.btnSimpanPemeriksaan.isEnabled = true
                         binding.btnSimpanPemeriksaan.text = "Simpan Pemeriksaan"
-                        Toast.makeText(this@PemeriksaanDetailActivity, "Koneksi Gagal", Toast.LENGTH_SHORT).show()
+                        Toast.makeText(
+                            this@PemeriksaanDetailActivity,
+                            "Koneksi Gagal",
+                            Toast.LENGTH_SHORT
+                        ).show()
                     }
                 })
         }
