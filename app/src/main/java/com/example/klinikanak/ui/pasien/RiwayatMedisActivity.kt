@@ -78,7 +78,7 @@ class RiwayatMedisActivity : AppCompatActivity() {
                         val body = response.body()
                         if (body?.status == "success") {
                             // 👇 Tampilkan hanya yang Lunas (6) ATAU Dibatalkan (99)
-                            val listFilter = body.data.filter { it.statusLayanan == 6 || it.statusLayanan == 99 }
+                            val listFilter = body.data.filter { it.statusLayanan == 99 || it.statusLayanan == 6 }
                             adapter.updateData(listFilter)
                             binding.tvEmpty.isVisible = adapter.itemCount == 0
                             if (body.data.isEmpty()) {
