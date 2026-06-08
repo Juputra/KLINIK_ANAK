@@ -29,12 +29,23 @@ class RiwayatAdapter(
         holder.binding.tvSubtitle1.text = "Diagnosa: " + (riwayat.diagnosa ?: "-")
         holder.binding.tvSubtitle2.text = "Resep: " + (riwayat.resepObat ?: "-")
 
-        holder.binding.tvStatus.text = "Selesai"
-        holder.binding.tvStatus.setBackgroundResource(R.drawable.bg_badge_green)
-        holder.binding.tvStatus.text = "Dibatalkan"
-        holder.binding.tvStatus.setBackgroundResource(R.drawable.bg_badge_red)
+        // LOGIKA PERBAIKAN: Gunakan 'when' agar status dinamis sesuai data
+        val statusText = when (riwayat.statusLayanan) {
+            6 -> "Selesai"
+            99 -> "Dibatalkan"
+            else -> "Status: ${riwayat.statusLayanan}" // Untuk jaga-jaga kalau ada status lain
+        }
 
-        // Terapkan aksi klik ke seluruh area card
+        val backgroundResource = when (riwayat.statusLayanan) {
+            6 -> R.drawable.bg_badge_green
+            99 -> R.drawable.bg_badge_red
+            else -> R.drawable.bg_badge_orange
+        }
+
+        holder.binding.tvStatus.text = statusText
+        holder.binding.tvStatus.setBackgroundResource(backgroundResource)
+
+        // Terapkan aksi klik
         holder.itemView.setOnClickListener {
             onItemClick?.invoke(riwayat)
         }
