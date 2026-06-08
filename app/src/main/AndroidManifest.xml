@@ -80,6 +80,7 @@
         <activity
             android:name=".ui.DetailRiwayatActivity"
             android:exported="false" />
+        <activity android:name=".ui.admin.MonitorLayananActivity" />
     </application>
 
 </manifest>

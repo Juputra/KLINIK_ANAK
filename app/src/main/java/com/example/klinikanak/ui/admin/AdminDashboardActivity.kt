@@ -54,6 +54,9 @@ class AdminDashboardActivity : AppCompatActivity() {
         binding.menuLaporan.setOnClickListener {
             startActivity(Intent(this, LaporanActivity::class.java))
         }
+        binding.menuMonitorLayanan.setOnClickListener {
+            startActivity(Intent(this, MonitorLayananActivity::class.java))
+        }
     }
 
     override fun onResume() {
