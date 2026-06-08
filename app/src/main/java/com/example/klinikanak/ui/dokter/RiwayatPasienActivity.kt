@@ -1,5 +1,6 @@
 package com.example.klinikanak.ui.dokter
 
+import android.content.Intent
 import android.os.Bundle
 import android.widget.Toast
 import androidx.appcompat.app.AppCompatActivity
@@ -9,6 +10,7 @@ import com.example.klinikanak.LayananResponse
 import com.example.klinikanak.adapter.RiwayatAdapter
 import com.example.klinikanak.api.ApiClient
 import com.example.klinikanak.databinding.ActivityRiwayatPasienBinding
+import com.example.klinikanak.ui.DetailRiwayatActivity
 import com.example.klinikanak.utils.SessionManager
 import retrofit2.Call
 import retrofit2.Callback
@@ -27,7 +29,17 @@ class RiwayatPasienActivity : AppCompatActivity() {
         sessionManager = SessionManager(this)
         setupToolbar()
 
-        adapter = RiwayatAdapter(emptyList())
+        adapter = RiwayatAdapter(emptyList()) { kunjungan ->
+            val intent = Intent(this, DetailRiwayatActivity::class.java).apply {
+                putExtra("nama_anak", kunjungan.namaAnak)
+                putExtra("tanggal", kunjungan.tanggalKunjungan)
+                putExtra("keluhan", kunjungan.keluhanAwal)
+                putExtra("diagnosa", kunjungan.diagnosa)
+                putExtra("resep", kunjungan.resepObat)
+                putExtra("biaya", kunjungan.totalBiaya ?: 0.0)
+            }
+            startActivity(intent)
+        }
         binding.rvRiwayatPasien.layoutManager = LinearLayoutManager(this)
         binding.rvRiwayatPasien.adapter = adapter
 
