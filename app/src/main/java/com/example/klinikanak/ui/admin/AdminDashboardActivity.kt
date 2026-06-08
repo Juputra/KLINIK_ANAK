@@ -57,6 +57,9 @@ class AdminDashboardActivity : AppCompatActivity() {
         binding.menuKelolaPasien.setOnClickListener {
             startActivity(Intent(this, KelolaPasienActivity::class.java))
         }
+        binding.menuMonitorLayanan.setOnClickListener {
+            startActivity(Intent(this, MonitorLayananActivity::class.java))
+        }
     }
 
     override fun onResume() {

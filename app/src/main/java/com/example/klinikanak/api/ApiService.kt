@@ -141,5 +141,11 @@ interface ApiService {
     @FormUrlEncoded
     @POST("hapus_pasien.php")
     fun hapusPasien(@Field("id_pasien") idPasien: String): Call<ApiResponse>
+
+    @FormUrlEncoded
+    @POST("hapus_kunjungan.php")
+    fun hapusKunjungan(
+        @Field("id_kunjungan") idKunjungan: String
+    ): Call<ApiResponse>
 }
 
