@@ -57,3 +57,9 @@ data class DokterResponse(
     @SerializedName("total_data") val totalData: Int,
     @SerializedName("data") val data: List<Dokter>
 )
+
+data class PasienResponse(
+    @SerializedName("status") val status: String,
+    @SerializedName("total_data") val totalData: Int,
+    @SerializedName("data") val data: List<Pasien>
+)

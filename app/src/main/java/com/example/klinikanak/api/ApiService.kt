@@ -4,6 +4,7 @@ import com.example.klinikanak.ApiResponse
 import com.example.klinikanak.LayananResponse
 import com.example.klinikanak.model.LoginResponse
 import com.example.klinikanak.DokterResponse
+import com.example.klinikanak.PasienResponse
 import retrofit2.Call
 import retrofit2.http.Field
 import retrofit2.http.FormUrlEncoded
@@ -20,17 +21,6 @@ interface ApiService {
         @Field("password") pass: String
     ): Call<LoginResponse>
 
-    @FormUrlEncoded
-    @POST("register_pasien.php")
-    fun registerPasien(
-        @Field("email") email: String,
-        @Field("password") pass: String,
-        @Field("nama_ortu") ortu: String,
-        @Field("nama_anak") anak: String,
-        @Field("tanggal_lahir_anak") tglLahir: String,
-        @Field("jenis_kelamin_anak") jk: String,
-        @Field("no_hp") hp: String
-    ): Call<ApiResponse>
 
     @FormUrlEncoded
     @POST("buat_janji.php")
@@ -119,6 +109,38 @@ interface ApiService {
     @FormUrlEncoded
     @POST("hapus_user.php")
     fun hapusUser(@Field("id_user") idUser: String): Call<ApiResponse>
+
+    @GET("get_pasien.php")
+    fun getPasien(): Call<PasienResponse>
+
+    @FormUrlEncoded
+    @POST("register_pasien.php")
+    fun registerPasien(
+        @Field("email") email: String,
+        @Field("password") pass: String,
+        @Field("nama_ortu") ortu: String,
+        @Field("nama_anak") anak: String,
+        @Field("tanggal_lahir_anak") tglLahir: String,
+        @Field("jenis_kelamin_anak") jk: String,
+        @Field("no_hp") hp: String
+    ): Call<ApiResponse>
+
+    @FormUrlEncoded
+    @POST("update_pasien.php")
+    fun updatePasien(
+        @Field("id_pasien") idPasien: String,
+        @Field("email") email: String,
+        @Field("password") pass: String,
+        @Field("nama_ortu") ortu: String,
+        @Field("nama_anak") anak: String,
+        @Field("tanggal_lahir_anak") tglLahir: String,
+        @Field("jenis_kelamin_anak") jk: String,
+        @Field("no_hp") hp: String
+    ): Call<ApiResponse>
+
+    @FormUrlEncoded
+    @POST("hapus_pasien.php")
+    fun hapusPasien(@Field("id_pasien") idPasien: String): Call<ApiResponse>
 
     @FormUrlEncoded
     @POST("hapus_kunjungan.php")
