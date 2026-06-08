@@ -1,5 +1,6 @@
 package com.example.klinikanak.ui.dokter
 
+import android.content.Intent
 import android.os.Bundle
 import android.widget.Toast
 import androidx.appcompat.app.AlertDialog
@@ -10,10 +11,12 @@ import com.example.klinikanak.databinding.ActivityPemeriksaanDetailBinding
 import retrofit2.Call
 import retrofit2.Callback
 import retrofit2.Response
+import kotlin.jvm.java
 
 class PemeriksaanDetailActivity : AppCompatActivity() {
     private lateinit var binding: ActivityPemeriksaanDetailBinding
     private var idKunjungan: String? = null
+    private var idPasien: String? = null
 
     override fun onCreate(savedInstanceState: Bundle?) {
         super.onCreate(savedInstanceState)
@@ -21,6 +24,7 @@ class PemeriksaanDetailActivity : AppCompatActivity() {
         setContentView(binding.root)
 
         idKunjungan = intent.getStringExtra("id_kunjungan")
+        idPasien = intent.getStringExtra("id_pasien")
         val keluhan   = intent.getStringExtra("keluhan") ?: "-"
         val namaAnak  = intent.getStringExtra("nama_anak") ?: "Pasien"
         val namaOrtu  = intent.getStringExtra("nama_ortu") ?: "-"
@@ -35,6 +39,13 @@ class PemeriksaanDetailActivity : AppCompatActivity() {
         // ✅ FIX 4: Klik tombol → tampilkan dialog konfirmasi dulu
         binding.btnSimpanPemeriksaan.setOnClickListener {
             tampilkanDialogKonfirmasi()
+        }
+        binding.btnLihatRiwayat.setOnClickListener {
+            val intent = Intent(this, RiwayatMasaLaluActivity::class.java).apply {
+                putExtra("id_pasien", idPasien)
+                putExtra("nama_anak", namaAnak)
+            }
+            startActivity(intent)
         }
     }
 

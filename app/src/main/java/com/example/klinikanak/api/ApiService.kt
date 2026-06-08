@@ -197,5 +197,9 @@ interface ApiService {
         @Field("id_kunjungan") idKunjungan: String,
         @Field("catatan_admin") catatan: String
     ): Call<ApiResponse>
+    @GET("get_riwayat_medis.php")
+    fun getRiwayatMedisPasien(
+        @Query("id_pasien") idPasien: String
+    ): Call<LayananResponse>
 }
 
